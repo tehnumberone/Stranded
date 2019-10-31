@@ -1,0 +1,27 @@
+﻿@model Stranded.Models.Character
+@{
+    ViewData["Title"] = "Characters";
+}
+<h1>Characters</h1>
+<form asp-action="CharacterCreation" method="post">
+    <div class="container row">
+        <div class="col-2">
+            <label>Character Name</label>
+        </div>
+        <div class="col-2">
+            <input type="text" asp-for="Name" name="Name" />
+        </div>
+        <div class="col-8"></div>
+        <div class="col-2">
+            <label>Character Model</label>
+        </div>
+        <div class="col-4">
+            <input type="button" id="Char1" value="" name="1" asp-for="CharacterModel" asp-action="SelectModel" />
+            <input type="button" id="Char2" value="" name="2" asp-for="CharacterModel" asp-action="SelectModel"/>
+            <input type="button" id="Char3" value=""name="3" asp-for="CharacterModel" asp-action="SelectModel"/>
+        </div>
+    </div>
+    <input type="hidden" asp-for="Id" name="Id" />
+    <input type="submit" value="Create" asp-action="Save" />
+</form>
+

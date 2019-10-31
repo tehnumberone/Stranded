@@ -1,0 +1,32 @@
+﻿@using Stranded.Models.ViewModels
+@model Stranded.Models.ViewModels.CharacterViewModel
+@{
+    ViewData["Title"] = "Characters";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    
+    <meta name="viewport" content="width=device-width"/>
+    <title>Characters</title>
+    <link rel="stylesheet" href="css/table.css"/>
+</head>
+<body>
+    @foreach (var character in Model.Characters)
+    {
+        <table style="width:100%">
+            <tr>
+                <th>Character Name</th>
+                <th>Character Model</th>
+            </tr>
+            <tr>
+                <td>@character.Name</td>
+                <td>@character.CharacterModel</td>
+            </tr>
+        </table> 
+    }
+
+</body>
+</html>

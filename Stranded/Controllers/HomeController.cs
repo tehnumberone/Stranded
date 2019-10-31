@@ -23,19 +23,6 @@ namespace Stranded.Controllers
         {
             return View();
         }
-        [HttpGet]
-        public IActionResult Characters()
-        {
-            Character chara = new Character();
-            return View(chara);
-        }
-        [HttpPost]
-        public IActionResult Save(Character chara)
-        {
-            CharacterContext cc = new CharacterContext();
-            cc.query();
-            return View("Characters");
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
