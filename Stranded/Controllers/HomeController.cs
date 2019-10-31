@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Stranded.Models;
+using Stranded.Context.MSSQL;
 
 namespace Stranded.Controllers
 {
@@ -22,10 +23,18 @@ namespace Stranded.Controllers
         {
             return View();
         }
-
-        public IActionResult Privacy()
+        [HttpGet]
+        public IActionResult Characters()
         {
-            return View();
+            Character chara = new Character();
+            return View(chara);
+        }
+        [HttpPost]
+        public IActionResult Save(Character chara)
+        {
+            CharacterContext cc = new CharacterContext();
+            cc.query();
+            return View("Characters");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
