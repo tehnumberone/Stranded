@@ -1,4 +1,4 @@
-﻿@model Stranded.Models.Character
+﻿@model Stranded.Models.ViewModels.CharacterCreationViewModel
 @{
     ViewData["Title"] = "Characters";
 }
@@ -16,9 +16,10 @@
             <label>Character Model</label>
         </div>
         <div class="col-4">
-            <input type="button" id="Char1" value="" name="1" asp-for="CharacterModel" asp-action="SelectModel" />
-            <input type="button" id="Char2" value="" name="2" asp-for="CharacterModel" asp-action="SelectModel"/>
-            <input type="button" id="Char3" value=""name="3" asp-for="CharacterModel" asp-action="SelectModel"/>
+            <input type="text" hidden asp-for="CharacterModel" />
+            <button id="Char1" value="" asp-for="CharacterModel" asp-action="Character1Selection"> </button>
+            <button id="Char2" value="" asp-for="CharacterModel" asp-action="Character2Selection"> </button>
+            <button id="Char3" value="" asp-for="CharacterModel" asp-action="Character3Selection"> </button>
         </div>
     </div>
     <input type="hidden" asp-for="Id" name="Id" />

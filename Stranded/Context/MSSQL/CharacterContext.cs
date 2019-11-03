@@ -25,6 +25,7 @@ namespace Stranded.Context.MSSQL
                     {
                         Character c = new Character()
                         {
+                            Id = Convert.ToInt32(reader["Id"]),
                             Name = reader["Name"].ToString(),
                             CharacterModel = Convert.ToInt32(reader["CharacterModel"])
                         };
@@ -57,7 +58,27 @@ namespace Stranded.Context.MSSQL
                 }
                 catch
                 {
-                    Console.WriteLine("Something went wrong");
+                    Console.WriteLine("Something went wrong while adding the character");
+                }
+            }
+            con.Close();
+        }
+        public void RemoveChar(int CharacterId)
+        {
+            using (con)
+            {
+                OpenConn();
+                try
+                {
+                    using (SqlCommand command = new SqlCommand("DELETE  FROM dbo.Characters WHERE Id='@CharacterId';", con))
+                    {
+                        command.Parameters.AddWithValue(@"CharacterId", CharacterId);
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("Something went wrong while removing the character");
                 }
             }
             con.Close();

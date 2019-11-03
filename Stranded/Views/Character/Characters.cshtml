@@ -1,4 +1,5 @@
-﻿@using Stranded.Models.ViewModels
+﻿@using System.Security.Cryptography.Xml
+@using Stranded.Models.ViewModels
 @model Stranded.Models.ViewModels.CharacterViewModel
 @{
     ViewData["Title"] = "Characters";
@@ -8,25 +9,42 @@
 
 <html>
 <head>
-    
-    <meta name="viewport" content="width=device-width"/>
+
+    <meta name="viewport" content="width=device-width" />
     <title>Characters</title>
-    <link rel="stylesheet" href="css/table.css"/>
+    <link rel="stylesheet" href="css/site.css" />
 </head>
 <body>
     @foreach (var character in Model.Characters)
     {
-        <table style="width:100%">
+        <table class="table table-bordered table-dark" style="width: 100%">
             <tr>
                 <th>Character Name</th>
                 <th>Character Model</th>
             </tr>
             <tr>
                 <td>@character.Name</td>
-                <td>@character.CharacterModel</td>
+                @if (character.CharacterModel == 1)
+                {
+                    <td> <label id="Char1"></label></td>
+                }
+                @if (character.CharacterModel == 2)
+                {
+                    <td><label id="Char2"></label></td>
+                }
+                @if (character.CharacterModel == 3)
+                {
+                    <td><label id="Char3"></label></td>
+                }
             </tr>
-        </table> 
+            <tr>
+                <td>
+                    <input type="text" hidden asp-for="Id" />
+                    <button id="" asp-for="Id" asp-controller="Map" asp-action="LoadMap">Play</button>
+                    <input type="submit" value="Delete" id="@character.Id" asp-for="Id" asp-controller="Character" asp-action="RemoveCharacter" />
+                </td>
+            </tr>
+        </table>
     }
-
 </body>
 </html>
