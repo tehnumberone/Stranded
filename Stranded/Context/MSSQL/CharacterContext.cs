@@ -10,6 +10,7 @@ namespace Stranded.Context.MSSQL
 {
     public class CharacterContext : DataConnection
     {
+        private List<string> tempList = new List<string>();
         public CharacterViewModel GetAllCharacters()
         {
             CharacterViewModel cvm = new CharacterViewModel();
@@ -27,7 +28,7 @@ namespace Stranded.Context.MSSQL
                         {
                             Id = Convert.ToInt32(reader["Id"]),
                             Name = reader["Name"].ToString(),
-                            CharacterModel = Convert.ToInt32(reader["CharacterModel"])
+                            CharacterModel = reader["CharacterModel"].ToString()
                         };
                         Characters.Add(c);
                     }
@@ -42,7 +43,7 @@ namespace Stranded.Context.MSSQL
 
             return cvm;
         }
-        public void CreateChar(string Name, int CharacterModel)
+        public void CreateChar(string Name, string CharacterModel)
         {
             using (con)
             {
@@ -70,18 +71,54 @@ namespace Stranded.Context.MSSQL
                 OpenConn();
                 try
                 {
-                    using (SqlCommand command = new SqlCommand("DELETE  FROM dbo.Characters WHERE Id='@CharacterId';", con))
+                    using (SqlCommand command = new SqlCommand("DELETE FROM dbo.Characters WHERE Id=@CharacterId", con))
                     {
                         command.Parameters.AddWithValue(@"CharacterId", CharacterId);
                         command.ExecuteNonQuery();
                     }
                 }
-                catch
+                catch (Exception exception)
                 {
-                    Console.WriteLine("Something went wrong while removing the character");
+                    Console.WriteLine(exception);
                 }
             }
             con.Close();
+        }
+
+        public List<string> LoadCharModels()
+        {
+            using (con)
+            {
+                OpenConn();
+                try
+                {
+                    using (SqlCommand command = new SqlCommand("SELECT * FROM dbo.CharacterModels", con))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                try
+                                {
+                                    string tempString;
+                                    tempString = reader["CharacterModel"].ToString();
+                                    tempList.Add(tempString);
+                                }
+                                catch (Exception exception)
+                                {
+                                    Console.WriteLine(exception);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
+                }
+            }
+            con.Close();
+            return tempList;
         }
     }
 }

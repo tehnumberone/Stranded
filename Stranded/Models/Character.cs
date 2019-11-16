@@ -9,7 +9,7 @@ namespace Stranded.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int CharacterModel { get; set; }
+        public string CharacterModel { get; set; }
         public int Hp { get; set; }
         public int Level { get; set; }
         public int Hydration { get; set; }

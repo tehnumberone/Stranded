@@ -23,18 +23,19 @@ namespace Stranded.Controllers
         }
 
         [HttpGet]
-        public IActionResult CharacterCreation()
+        public IActionResult CharacterCreation(CharacterCreationViewModel ccvm)
         {
-            CharacterCreationViewModel ccvm = new CharacterCreationViewModel();
+            CharacterContext cc = new CharacterContext();
+            ccvm.CharModels = cc.LoadCharModels();
             return View(ccvm);
         }
 
         [HttpPost]
-        public IActionResult Save(string Name, int CharacterModel)
-        {
+        public IActionResult Save(CharacterCreationViewModel ccvm)
+        {   
             CharacterContext cc = new CharacterContext();
-            cc.CreateChar(Name, CharacterModel);
-            return View("CharacterCreation");
+            cc.CreateChar(ccvm.Name, ccvm.CharacterModel);
+            return View("CharacterCreation",ccvm);
         }
 
         [HttpPost]
@@ -43,35 +44,7 @@ namespace Stranded.Controllers
             CharacterViewModel cvm = new CharacterViewModel();
             CharacterContext cc = new CharacterContext();
             cc.RemoveChar(Id);
-            return View("Characters", cvm);
+            return RedirectToAction("Characters", cvm);
         }
-
-        [HttpPost]
-        public IActionResult Character1Selection(string name)
-        {
-            CharacterCreationViewModel ccvm = new CharacterCreationViewModel();
-            ccvm.Name = name;
-            ccvm.CharacterModel = 1;
-            return View("CharacterCreation", ccvm);
-        }
-
-        [HttpPost]
-        public IActionResult Character2Selection(string name)
-        {
-            CharacterCreationViewModel ccvm = new CharacterCreationViewModel();
-            ccvm.Name = name;
-            ccvm.CharacterModel = 2;
-            return View("CharacterCreation", ccvm);
-        }
-
-        [HttpPost]
-        public IActionResult Character3Selection(string name)
-        {
-            CharacterCreationViewModel ccvm = new CharacterCreationViewModel();
-            ccvm.Name = name;
-            ccvm.CharacterModel = 3;
-            return View("CharacterCreation", ccvm);
-        }
-
     }
 }

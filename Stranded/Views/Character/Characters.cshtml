@@ -1,6 +1,4 @@
-﻿@using System.Security.Cryptography.Xml
-@using Stranded.Models.ViewModels
-@model Stranded.Models.ViewModels.CharacterViewModel
+﻿@model Stranded.Models.ViewModels.CharacterViewModel
 @{
     ViewData["Title"] = "Characters";
 }
@@ -24,24 +22,20 @@
             </tr>
             <tr>
                 <td>@character.Name</td>
-                @if (character.CharacterModel == 1)
-                {
-                    <td> <label id="Char1"></label></td>
-                }
-                @if (character.CharacterModel == 2)
-                {
-                    <td><label id="Char2"></label></td>
-                }
-                @if (character.CharacterModel == 3)
-                {
-                    <td><label id="Char3"></label></td>
-                }
+                <td> <img src="../images/CharModels/@character.CharacterModel"/></td>
             </tr>
             <tr>
                 <td>
-                    <input type="text" hidden asp-for="Id" />
-                    <button id="" asp-for="Id" asp-controller="Map" asp-action="LoadMap">Play</button>
-                    <input type="submit" value="Delete" id="@character.Id" asp-for="Id" asp-controller="Character" asp-action="RemoveCharacter" />
+                    <form method="get" asp-for="@character.Id" asp-controller="Map" asp-action="LoadMap">
+                        <input type="hidden" name="Id" value="@character.Id" />
+                        <input type="submit" value="Play" />
+                    </form>
+                </td>
+                <td>
+                    <form method="post" asp-for="@character.Id" asp-controller="Character" asp-action="RemoveCharacter">
+                        <input type="hidden" name="Id" value="@character.Id" />
+                        <input type="submit" value="Delete" />
+                    </form>
                 </td>
             </tr>
         </table>

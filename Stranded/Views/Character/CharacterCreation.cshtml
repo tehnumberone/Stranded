@@ -1,7 +1,9 @@
-﻿@model Stranded.Models.ViewModels.CharacterCreationViewModel
+﻿@using Stranded.Models
+@model Stranded.Models.ViewModels.CharacterCreationViewModel
 @{
-    ViewData["Title"] = "Characters";
+    ViewData["Title"] = "CharacterCreation";
 }
+
 <h1>Characters</h1>
 <form asp-action="CharacterCreation" method="post">
     <div class="container row">
@@ -16,13 +18,15 @@
             <label>Character Model</label>
         </div>
         <div class="col-4">
-            <input type="text" hidden asp-for="CharacterModel" />
-            <button id="Char1" value="" asp-for="CharacterModel" asp-action="Character1Selection"> </button>
-            <button id="Char2" value="" asp-for="CharacterModel" asp-action="Character2Selection"> </button>
-            <button id="Char3" value="" asp-for="CharacterModel" asp-action="Character3Selection"> </button>
+
+            @foreach (var charModel in @Model.CharModels)
+            {
+                string charmodel = @charModel;
+                <input type="hidden" id="CharModelInput" asp-for="CharacterModel" value="" />
+                <input type="button" class="Char" data-model="@charmodel" style="background-image: url(../images/CharModels/@charmodel" />
+            }
         </div>
     </div>
     <input type="hidden" asp-for="Id" name="Id" />
     <input type="submit" value="Create" asp-action="Save" />
 </form>
-

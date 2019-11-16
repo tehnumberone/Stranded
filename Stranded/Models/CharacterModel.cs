@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Stranded.Models.ViewModels
+namespace Stranded.Models
 {
-    public class CharacterCreationViewModel
+    public class CharacterModel
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string CharacterModel { get; set; }
-
         public List<string> CharModels = new List<string>();
     }
 }

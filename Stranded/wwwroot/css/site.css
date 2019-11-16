@@ -73,24 +73,34 @@ body {
     line-height: 60px; /* Vertically center the text there */
 }
 
-#Char1 {
-    background-image: url(../images/CharModels/char1.jpg);
+.Char {
     width: 50px;
-    height: 75px;
+    height: 50px;
 }
+#CharModelInput {
 
-#Char2 {
-    background-image: url(../images/CharModels/char2.jpg);
-    width: 50px;
-    height: 75px;
 }
-
-#Char3 {
-    background-image: url(../images/CharModels/char3.jpg);
-    width: 50px;
-    height: 75px;
-}
-
 .table {
     border-spacing: 20px;
+}
+td {
+    padding: 0px;
+}
+.Gui {
+    background-image: url(../images/Map/inventorybackground.jpg);
+    border: 1px black solid;
+    border-radius: 10px;
+    border-style: outset;
+    text-align: center;
+    font-weight: bolder;
+    font-min-size: 15px;
+}
+.Gui_Buttons {
+    font-size: 20px;
+    font-weight: bolder;
+}
+
+.Gui_Inventory {
+    padding-top: 30px;
+    min-height: 700px;
 }
