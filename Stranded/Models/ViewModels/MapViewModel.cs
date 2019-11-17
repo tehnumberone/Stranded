@@ -7,6 +7,7 @@ namespace Stranded.Models.ViewModels
 {
     public class MapViewModel
     {
-
+        public int Size { get; set; }
+        public Character character = new Character();
     }
 }

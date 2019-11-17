@@ -12,7 +12,8 @@ namespace Stranded.Controllers
     {
         public IActionResult LoadMap()
         {
-            return View("Map");
+            MapViewModel mvm = new MapViewModel();
+            return View("Map", mvm);
         }
     }
 }
