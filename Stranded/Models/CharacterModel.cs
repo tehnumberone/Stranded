@@ -8,6 +8,6 @@ namespace Stranded.Models
     public class CharacterModel
     {
         public int Id { get; set; }
-        public List<string> CharModels = new List<string>();
+        public string characterModel { get; set; }
     }
 }

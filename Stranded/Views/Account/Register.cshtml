@@ -1,0 +1,27 @@
+﻿@model Stranded.Models.ViewModels.RegisterViewModel
+<head>
+
+</head>
+<h1>Register Account</h1>
+<body>
+    <div class="row">
+        <form asp-controller="Account" method="post">
+            <div class="col-md-6">
+                <label>Username</label> <input type="text" asp-for="Username" value="" />
+                <span asp-validation-for="Username" class="text-info"></span>
+            </div>
+            <div class="col-md-6">
+                <label>Password</label> <input type="password" asp-for="Password" value="" />
+                <span asp-validation-for="Password" class="text-info"></span>
+            </div>
+            <div class="col-md-6">
+                <label>Email</label> <input type="email" asp-for="Email" value="" />
+                <span asp-validation-for="Email" class="text-info"></span>
+            </div>
+            <br />
+            <div class="col-md-6">
+                <input type="submit" asp-action="Register" formmethod="post" value="Register"/>
+            </div>
+        </form>
+    </div>
+</body>

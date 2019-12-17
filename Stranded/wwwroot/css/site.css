@@ -1,22 +1,31 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
+﻿/*Navigatie                               */
 a.navbar-brand {
     white-space: normal;
     text-align: center;
     word-break: break-all;
+    color: white;
 }
 
-/* Provide sufficient contrast against white background */
-a {
-    color: #0366d6;
+    a.navbar-brand:hover {
+        color: #0366d6;
+    }
+
+#navi {
+    height: 40px;
+    transition: all .2s ease;
 }
 
-.btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+
+.nav-container {
+    background-color: #212529;
+    color: white;
 }
+
+    .nav-container:hover #navi {
+        font-size: 18px;
+        height: 75px;
+        transition: all .2s ease;
+    }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
     color: #fff;
@@ -24,10 +33,59 @@ a {
     border-color: #1861ac;
 }
 
-/* Sticky footer styles
--------------------------------------------------- */
+a {
+    color: white;
+}
+
+.dropdown {
+}
+
+.dropdown-menu {
+    background-color: #212529;
+    padding-top: 20px;
+}
+
+.nav-item {
+    padding-right: 25px;
+}
+/*........................................*/
+/* Buttons                                */
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+button.accept-policy {
+    font-size: 1rem;
+    line-height: inherit;
+}
+
+/*........................................*/
+
+/* Opmaak website                         */
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+
 html {
     font-size: 14px;
+}
+
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px; /* Vertically center the text there */
 }
 
 @media (min-width: 768px) {
@@ -48,66 +106,93 @@ html {
     box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
-button.accept-policy {
-    font-size: 1rem;
-    line-height: inherit;
-}
+/*........................................*/
 
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-    position: relative;
-    min-height: 100%;
-}
-
-body {
-    /* Margin bottom by footer height */
-    margin-bottom: 60px;
-}
-
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    white-space: nowrap;
-    line-height: 60px; /* Vertically center the text there */
-}
-
+/* Opmaak character creation en selection */
 .Char {
     width: 50px;
-    height: 50px;
+    height: 75px;
 }
-#CharModelInput {
 
+.charName {
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size:18px;
 }
+
+.smalltd {
+    width: 200px;
+    text-align: center;
+}
+
+.largetd {
+    font-size:20px;
+    width: 800px;
+    text-align: left;
+}
+
+#CharModelInput {
+}
+
+.itemImage {
+    width: 150px;
+    height: 150px;
+}
+
 .table {
     border-spacing: 20px;
 }
+
 td {
     padding: 0px;
 }
+
 .Gui {
-    background-image: url(../images/Map/inventorybackground.jpg);
+    background-image: url('../images/map/backgroundgame.png');
     border: 1px black solid;
-    border-radius: 10px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
     border-style: outset;
     text-align: center;
     font-weight: bolder;
     font-min-size: 15px;
+    width: 1100px;
+    height: 800px;
 }
+
 .Gui_Buttons {
     font-size: 20px;
     font-weight: bolder;
+    background-color: #212529;
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border: 1px black solid;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    width: 1100px;
 }
 
 .Gui_Inventory {
-    padding-top: 30px;
     min-height: 700px;
 }
 
 .Gui_Game {
-    padding-top: 30px;
 }
-.Tile {
 
+.Tile {
+    background-image: url(../images/Map/grass.jpg);
+    width: 100px;
+    height: 100px;
 }
+
+#gameScreen {
+    border: 1px solid black;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    width: 800px;
+}
+/*........................................*/

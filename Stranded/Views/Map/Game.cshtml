@@ -1,0 +1,25 @@
+﻿@model Stranded.Models.ViewModels.MapViewModel
+<html>
+<head>
+</head>
+<body>
+    <style>
+        body {
+            overflow-x: hidden;
+        }
+
+        img {
+            display: none;
+        }
+    </style>
+    <img id="character" src="~/images/CharModels/@Model.character.CharacterModel" />
+    <img id="mainmenuImg" src="~/images/Map/firstLevelStranded.png" />
+    <img id="inventoryImg" src="~/images/Map/inventoryBackground.jpg" />
+    <img id="mainmenuImg" src="~/images/Map/MainMenuStranded.png" />
+    <div class="Gui_Game">
+        <canvas id="gameScreen" width="800" height="800"></canvas>
+        <script type="module" src="~/js/gameLogic.js"></script>
+        <script type="module" src="~/js/gameScreen.js"></script>
+    </div>
+</body>
+</html>

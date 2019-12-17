@@ -9,11 +9,18 @@
 function SetCharId(charId, charModelString) {
     $(charId).val(charModelString);
 }
-$(function () {
-    $(".Tile").click(function () {
-        var oldtd;
-        oldtd = this;
-        $(this).attr('src', "../images/CharModels/" + $(this).data("model"));
-        $(oldtd).prev.attr('src', "../images/Map/grass.jpg");
-    });
-});
+
+function toggleDropdown(e) {
+    const _d = $(e.target).closest('.dropdown'),
+        _m = $('.dropdown-menu', _d);
+    setTimeout(function () {
+        const shouldOpen = e.type !== 'click' && _d.is(':hover');
+        _m.toggleClass('show', shouldOpen);
+        _d.toggleClass('show', shouldOpen);
+        $('[data-toggle="dropdown"]', _d).attr('aria-expanded', shouldOpen);
+    }, e.type === 'mouseleave' ? 100 : 0);
+}
+
+$('body')
+    .on('mouseenter mouseleave', '.dropdown', toggleDropdown)
+    .on('click', '.dropdown-menu a', toggleDropdown);

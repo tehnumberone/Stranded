@@ -1,50 +1,83 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Stranded.Context.MSSQL;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Newtonsoft.Json;
 using Stranded.Models;
 using Stranded.Models.ViewModels;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Stranded.Repositories;
+using System.Text;
+using Microsoft.AspNetCore.Http;
 
 namespace Stranded.Controllers
 {
     public class CharacterController : Controller
     {
+        private readonly CharacterRepo _cr;
+        private readonly AccountRepo _ar;
+
+        public CharacterController(CharacterRepo cr, AccountRepo ar)
+        {
+            _ar = ar;
+            _cr = cr;
+        }
+        #region character menu
+
         [HttpGet]
         public IActionResult Characters()
         {
-            CharacterViewModel cvm = new CharacterViewModel();
-            CharacterContext cc = new CharacterContext();
-            cvm = cc.GetAllCharacters();
+            if (HttpContext.Session.GetString("Username") == null) { return RedirectToAction("Login", "Account"); }
+            var cvm = new CharacterViewModel
+            {
+                Characters = _cr.GetAll(_ar.GetByName(HttpContext.Session.GetString("Username")))
+            };
             return View(cvm);
-        }
-
-        [HttpGet]
-        public IActionResult CharacterCreation(CharacterCreationViewModel ccvm)
-        {
-            CharacterContext cc = new CharacterContext();
-            ccvm.CharModels = cc.LoadCharModels();
-            return View(ccvm);
-        }
-
-        [HttpPost]
-        public IActionResult Save(CharacterCreationViewModel ccvm)
-        {   
-            CharacterContext cc = new CharacterContext();
-            cc.CreateChar(ccvm.Name, ccvm.CharacterModel);
-            return View("CharacterCreation",ccvm);
         }
 
         [HttpPost]
         public IActionResult RemoveCharacter(int Id)
         {
-            CharacterViewModel cvm = new CharacterViewModel();
-            CharacterContext cc = new CharacterContext();
-            cc.RemoveChar(Id);
-            return RedirectToAction("Characters", cvm);
+            _cr.Delete(Id);
+            return RedirectToAction("Characters");
+        }
+
+        [HttpPost]
+        public IActionResult Play(int Id)
+        {
+            var character = _cr.GetById(Id);
+            return RedirectToAction("LoadMap", "Map", character);
+        }
+        #endregion
+
+        [HttpGet]
+        public IActionResult CharacterCreation()
+        {
+            if (HttpContext.Session.GetString("Username") == null) { return RedirectToAction("Login", "Account"); }
+            CharacterCreationViewModel ccvm = new CharacterCreationViewModel
+            {
+                CharModels = _cr.GetAllCharModels()
+            };
+            return View(ccvm);
+        }
+
+        [HttpPost]
+        public IActionResult CharacterCreation(CharacterCreationViewModel ccvm)
+        {
+            if (ModelState.IsValid)
+            {
+                Account acc = _ar.GetByName(HttpContext.Session.GetString("Username"));
+                var c = new Character()
+                {
+                    Name = ccvm.Name,
+                    CharacterModel = ccvm.CharacterModel
+                };
+                _cr.Create(c, acc);
+                return RedirectToAction("Characters");
+            }
+            else
+            {
+                ccvm.CharModels = _cr.GetAllCharModels();
+                return View(ccvm);
+            }
         }
     }
 }

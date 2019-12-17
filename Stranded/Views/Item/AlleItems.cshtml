@@ -1,0 +1,33 @@
+﻿@model Stranded.Models.ViewModels.ItemViewModel
+@{
+    ViewData["Title"] = "AlleItems";
+}
+<body>
+    <table class="table table-bordered table-dark largetd" align="center" style="width: 100%">
+        <tr>
+            <th>Item Image</th>
+            <th>Item Name</th>
+            <th>Item Type</th>
+            <th>Options</th>
+        </tr>
+        @foreach (var item in Model.AlleItems)
+        {
+            <tr>
+                <td> <img src="data:image/png;base64,@item.ImageFile" class="itemImage" /> </td>
+                <td><label class="charName">@item.Name</label></td>
+                <td><label class="charName">@item.ItemType</label></td>
+                <td class="smalltd">
+                    <form method="get" asp-for="@item.Id" asp-controller="Item" asp-action="SelectItem">
+                        <input type="hidden" name="Id" value="@item.Id" />
+                        <input type="submit" value="Select" />
+                    </form>
+                    <br />
+                    <form method="post" asp-for="@item.Id" asp-controller="Item" asp-action="RemoveItem">
+                        <input type="hidden" name="Id" value="@item.Id" />
+                        <input type="submit" value="Delete" />
+                    </form>
+                </td>
+            </tr>
+        }
+    </table>
+</body>

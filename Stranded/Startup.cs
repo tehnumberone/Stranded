@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Stranded.Context.Interfaces;
+using Stranded.Context.SQLContext;
+using Stranded.Repositories;
 
 namespace Stranded
 {
@@ -23,6 +26,22 @@ namespace Stranded
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                // Make the session cookie essential
+                options.Cookie.IsEssential = true;
+            });
+            services.AddTransient<ICharacterContext, CharacterContext>();
+            services.AddScoped<CharacterRepo>();
+            services.AddTransient<IAccountContext, AccountContext>();
+            services.AddScoped<AccountRepo>();
+            services.AddTransient<IItemContext, ItemContext>();
+            services.AddScoped<ItemRepo>();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
 
@@ -41,16 +60,14 @@ namespace Stranded
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Account}/{action=Login}/{id?}");
             });
         }
     }
