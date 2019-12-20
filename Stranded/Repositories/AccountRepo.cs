@@ -52,5 +52,9 @@ namespace Stranded.Repositories
         {
             return ctx.GetByName(username);
         }
+        public List<Account> GetAllAccounts()
+        {
+            return ctx.GetAllAccounts();
+        }
     }
 }

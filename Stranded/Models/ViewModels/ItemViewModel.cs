@@ -12,7 +12,8 @@ namespace Stranded.Models.ViewModels
         public string Name { get; set; }
         public ItemType ItemType { get; set; }
         public List<Item> DBItems { get; set; }
-        public List<ItemViewModel> AlleItems { get; set; }
+        public List<ItemViewModel> AllItems { get; set; }
+        public int Sortingtype { get; set; }
         public int Amount { get; set; }
         public string ImageFile { get; set; }
     }

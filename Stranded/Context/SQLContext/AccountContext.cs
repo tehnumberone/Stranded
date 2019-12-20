@@ -113,5 +113,37 @@ namespace Stranded.Context.SQLContext
             return false;
         }
 
+        public List<Account> GetAllAccounts()
+        {
+            List<Account> Accounts = new List<Account>();
+            string query =
+                "SELECT Accounts.Username, Characters.Name, Characters.Id, Characters.CharacterModel " +
+                "FROM Accounts " +
+                "INNER JOIN Characters ON Accounts.Id = Characters.AccountID " +
+                "GROUP BY Accounts.Username, Characters.Name, Characters.Id, Characters.CharacterModel " +
+                "ORDER BY Accounts.Username;";
+            var connection = new SqlConnection(_connectionString);
+            try
+            {
+                connection.Open();
+                using SqlCommand cmd = new SqlCommand(query, connection);
+                using SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    Account acc = new Account();
+                    acc.Characters = new List<Character>();
+                    acc.Username = (string)reader["Username"];
+                    acc.Characters.Add(new Character(Id: (int)reader["Id"], Name: (string)reader["Name"], CharacterModel: (string)reader["CharacterModel"]));
+                    Accounts.Add(acc);
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
+            connection.Close();
+            return Accounts;
+
+        }
     }
 }

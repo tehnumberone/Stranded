@@ -1,6 +1,6 @@
 ﻿@model Stranded.Models.ViewModels.ItemViewModel
 @{
-    ViewData["Title"] = "AlleItems";
+    ViewData["Title"] = "AllItems";
 }
 <body>
     <table class="table table-bordered table-dark largetd" align="center" style="width: 100%">
@@ -10,21 +10,24 @@
             <th>Item Type</th>
             <th>Options</th>
         </tr>
-        @foreach (var item in Model.AlleItems)
+        @foreach (var item in Model.AllItems)
         {
             <tr>
                 <td> <img src="data:image/png;base64,@item.ImageFile" class="itemImage" /> </td>
                 <td><label class="charName">@item.Name</label></td>
                 <td><label class="charName">@item.ItemType</label></td>
                 <td class="smalltd">
-                    <form method="get" asp-for="@item.Id" asp-controller="Item" asp-action="SelectItem">
-                        <input type="hidden" name="Id" value="@item.Id" />
+                    <form method="get" asp-controller="Item" asp-action="SelectItem">
+                        <input type="hidden" asp-for="Id" value="@item.Id" />
                         <input type="submit" value="Select" />
                     </form>
-                    <br />
-                    <form method="post" asp-for="@item.Id" asp-controller="Item" asp-action="RemoveItem">
-                        <input type="hidden" name="Id" value="@item.Id" />
+                    <form method="post" asp-controller="Item" asp-action="RemoveItem">
+                        <input type="hidden" asp-for="Id" value="@item.Id" />
                         <input type="submit" value="Delete" />
+                    </form>
+                    <form method="post" asp-controller="Item" asp-action="Sorteer">
+                        <input type="hidden" asp-for="Sortingtype" value="@Model.Sortingtype" />
+                        <input type="submit" value="Sort by Type" />
                     </form>
                 </td>
             </tr>

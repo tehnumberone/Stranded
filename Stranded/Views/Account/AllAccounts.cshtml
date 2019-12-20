@@ -1,0 +1,27 @@
+﻿@model Stranded.Models.ViewModels.AccountViewModel
+@{
+    ViewData["Title"] = "AllAccounts";
+}
+
+<h1>All Accounts</h1>
+<table class="table table-bordered table-dark largetd" align="center">
+    <tr>
+        <th>User</th>
+        <th>Character</th>
+        <th>Options</th>
+    </tr>
+    @foreach (var Account in Model.AllAccounts)
+    {
+        <tr>
+            <td><label class="charName">@Account.Username</label></td>
+            @foreach (var Character in Account.Characters)
+            {
+                <td> <img src="../images/CharModels/@Character.CharacterModel" /> <label class="charName">@Character.Name</label></td>
+                <td class="smalltd">
+                    <div>
+                    </div>
+                </td>
+            }
+        </tr>
+    }
+</table>

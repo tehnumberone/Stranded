@@ -29,11 +29,14 @@
                             @if (Context.Session.GetString("Username") == "Admin")
                             {
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link" asp-controller="Item" asp-action="AlleItems">Items</a>
+                                    <a class="nav-link" asp-controller="Item" asp-action="AllItems">Items</a>
                                     <div class="dropdown-menu">
-                                        <a class="nav-link" asp-controller="Item" asp-action="AlleItems">Items</a>
+                                        <a class="nav-link" asp-controller="Item" asp-action="AllItems">Items</a>
                                         <a class="nav-link" asp-controller="Item" asp-action="CreateItem">Create Item</a>
                                     </div>
+                                </li>
+                                <li>
+                                    <a class="nav-link" asp-controller="Account" asp-action="AllAccounts">All Accounts</a>
                                 </li>
                             }
                             @if (Context.Session.GetString("Username") == null)

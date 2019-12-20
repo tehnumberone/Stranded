@@ -75,5 +75,10 @@ namespace Stranded.Context.TestContext
         {
             throw new NotImplementedException();
         }
+
+        public List<Account> GetAllAccounts()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

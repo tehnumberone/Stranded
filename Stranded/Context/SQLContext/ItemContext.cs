@@ -75,10 +75,18 @@ namespace Stranded.Context.SQLContext
             return false;
         }
 
-        public List<Item> GetAllItems()
+        public List<Item> GetAllItems(int sorteertype)
         {
             List<Item> Items = new List<Item>();
             string query = "SELECT * FROM dbo.Items";
+            if (sorteertype == 0)
+            {
+                query = "SELECT * FROM dbo.Items ORDER BY Type DESC";
+            }
+            else if (sorteertype == 1)
+            {
+                query = "SELECT * FROM dbo.Items ORDER BY Type ASC";
+            }
             var connection = new SqlConnection(_connectionString);
             try
             {

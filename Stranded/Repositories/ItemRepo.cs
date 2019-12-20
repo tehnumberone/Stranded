@@ -31,9 +31,9 @@ namespace Stranded.Repositories
         {
             return ctx.Delete(id);
         }
-        public List<Item> GetAllItems()
+        public List<Item> GetAllItems(int sorteertype)
         {
-            return ctx.GetAllItems();
+            return ctx.GetAllItems(sorteertype);
         }
     }
 }

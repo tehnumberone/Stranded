@@ -52,7 +52,6 @@ namespace Stranded.Controllers
         {
             return View();
         }
-
         [HttpPost]
         public IActionResult Register(RegisterViewModel rvm)
         {
@@ -70,6 +69,16 @@ namespace Stranded.Controllers
                 }
             }
             return View(rvm);
+        }
+        [HttpGet]
+        public IActionResult AllAccounts()
+        {
+            if (HttpContext.Session.GetString("Username") != "Admin") { return RedirectToAction("Home", "Index"); }
+            var avm = new AccountViewModel()
+            {
+                AllAccounts = _ar.GetAllAccounts()
+            };
+            return View(avm);
         }
     }
 }

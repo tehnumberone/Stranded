@@ -19,16 +19,12 @@ namespace Stranded.Controllers
         {
             _ir = ir;
         }
-
         [HttpGet]
-        public IActionResult AlleItems()
+        public IActionResult AllItems(ItemViewModel ivm)
         {
             if (HttpContext.Session.GetString("Username") != "Admin") { return RedirectToAction("Index", "Home"); }
-            ItemViewModel ivm = new ItemViewModel()
-            {
-                DBItems = _ir.GetAllItems(),
-                AlleItems = new List<ItemViewModel>()
-            };
+            ivm.DBItems = _ir.GetAllItems(ivm.Sortingtype);
+            ivm.AllItems = new List<ItemViewModel>();
             foreach (Item item in ivm.DBItems)
             {
                 ItemViewModel temp = new ItemViewModel()
@@ -38,11 +34,10 @@ namespace Stranded.Controllers
                     ItemType = item.ItemType,
                     ImageFile = Convert.ToBase64String(item.ImageFile)
                 };
-                ivm.AlleItems.Add(temp);
+                ivm.AllItems.Add(temp);
             }
             return View(ivm);
         }
-
         [HttpGet]
         public IActionResult CreateItem()
         {
@@ -50,7 +45,6 @@ namespace Stranded.Controllers
             ItemCreationViewModel icvm = new ItemCreationViewModel();
             return View(icvm);
         }
-
         [HttpPost]
         public IActionResult Save(ItemCreationViewModel icvm)
         {
@@ -70,15 +64,22 @@ namespace Stranded.Controllers
                     ItemType = icvm.ItemType,
                 };
                 _ir.Create(tempitem);
-                return RedirectToAction("AlleItems", "Item");
+                return RedirectToAction("AllItems", "Item");
             }
             return View("CreateItem", icvm);
         }
-        [HttpDelete]
-        public IActionResult RemoveItem(ItemCreationViewModel icvm)
+        [HttpPost]
+        public IActionResult RemoveItem(ItemViewModel ivm)
         {
-            _ir.Delete(icvm.Id);
+            _ir.Delete(ivm.Id);
             return RedirectToAction("AlleItems");
+        }
+        [HttpPost]
+        public IActionResult Sorteer(ItemViewModel ivm)
+        {
+            if (ivm.Sortingtype == 0) { ivm.Sortingtype = 1; }
+            else { ivm.Sortingtype = 0; }
+            return RedirectToAction("AllItems", ivm);
         }
     }
 }

@@ -64,12 +64,28 @@ button.accept-policy {
 /*........................................*/
 
 /* Opmaak website                         */
+h1 {
+    font-family: SF Pro Text, SF Pro Icons, AOS Icons, Helvetica Neue, Helvetica, Arial, sans-serif;
+}
 
 html {
     position: relative;
     min-height: 100%;
 }
 
+.form-control {
+    width: 220px;
+}
+
+select {
+    border-radius: 10px;
+    min-width:208px;
+}
+
+input {
+    border-radius: 10px;
+    min-width: 54px !important;
+}
 
 html {
     font-size: 14px;
@@ -77,6 +93,9 @@ html {
 
 body {
     /* Margin bottom by footer height */
+    background: #F1F2B5;
+    background: -webkit-linear-gradient(to right, #135058, #F1F2B5);
+    background: linear-gradient(to right, #135058, #F1F2B5);
     margin-bottom: 60px;
 }
 
@@ -99,7 +118,7 @@ body {
 }
 
 .border-bottom {
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 0px solid #e5e5e5 !important;
 }
 
 .box-shadow {
@@ -112,21 +131,24 @@ body {
 .Char {
     width: 50px;
     height: 75px;
+    display: inline !important;
+    margin-top: 10px !important;
 }
 
 .charName {
     padding-left: 20px;
     padding-right: 20px;
-    font-size:18px;
+    font-size: 18px;
 }
 
 .smalltd {
     width: 200px;
-    text-align: center;
+    text-align: left;
+    padding-left: 10px;
 }
 
 .largetd {
-    font-size:20px;
+    font-size: 20px;
     width: 800px;
     text-align: left;
 }

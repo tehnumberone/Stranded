@@ -11,5 +11,6 @@ namespace Stranded.Context.Interfaces
         bool Delete(int id);
         Account GetByName(string username);
         bool Exists(string username);
+        List<Account> GetAllAccounts();
     }
 }

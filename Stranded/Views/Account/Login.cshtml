@@ -7,13 +7,13 @@
     <div class="row">
         <form asp-controller="Account" method="post">
             <div class="col-md-5">
-                <label>Username</label> <input type="text" asp-for="Username" value="" />
+                <label>Username</label> <input type="text" asp-for="Username" value="" class="form-control" />
                 <span asp-validation-for="Username" class="alert-danger"></span>
             </div>
             <div class="col-md-2"></div>
             <br />
             <div class="col-md-5">
-                <label>Password</label> <input type="password" asp-for="Password" value="" />
+                <label>Password</label> <input type="password" asp-for="Password" value="" class="form-control" />
                 <span asp-validation-for="Password" class="alert-danger"></span>
             </div>
             <br />

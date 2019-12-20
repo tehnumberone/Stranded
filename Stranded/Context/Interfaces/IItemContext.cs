@@ -10,7 +10,7 @@ namespace Stranded.Context.Interfaces
         bool Create(Item item);
         bool Update(int id);
         bool Delete(int id);
-        List<Item> GetAllItems();
+        List<Item> GetAllItems(int sorteertype);
 
     }
 }

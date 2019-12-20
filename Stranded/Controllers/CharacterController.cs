@@ -20,8 +20,6 @@ namespace Stranded.Controllers
             _ar = ar;
             _cr = cr;
         }
-        #region character menu
-
         [HttpGet]
         public IActionResult Characters()
         {
@@ -32,22 +30,6 @@ namespace Stranded.Controllers
             };
             return View(cvm);
         }
-
-        [HttpPost]
-        public IActionResult RemoveCharacter(int Id)
-        {
-            _cr.Delete(Id);
-            return RedirectToAction("Characters");
-        }
-
-        [HttpPost]
-        public IActionResult Play(int Id)
-        {
-            var character = _cr.GetById(Id);
-            return RedirectToAction("LoadMap", "Map", character);
-        }
-        #endregion
-
         [HttpGet]
         public IActionResult CharacterCreation()
         {
@@ -58,7 +40,12 @@ namespace Stranded.Controllers
             };
             return View(ccvm);
         }
-
+        [HttpPost]
+        public IActionResult RemoveCharacter(CharacterViewModel cvm)
+        {
+            _cr.Delete(cvm.Id);
+            return RedirectToAction("Characters");
+        }
         [HttpPost]
         public IActionResult CharacterCreation(CharacterCreationViewModel ccvm)
         {
@@ -78,6 +65,12 @@ namespace Stranded.Controllers
                 ccvm.CharModels = _cr.GetAllCharModels();
                 return View(ccvm);
             }
+        }
+        [HttpPost]
+        public IActionResult Play(int Id)
+        {
+            var character = _cr.GetById(Id);
+            return RedirectToAction("LoadMap", "Map", character);
         }
     }
 }

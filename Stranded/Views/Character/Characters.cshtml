@@ -24,13 +24,13 @@
             <tr>
                 <td> <img src="../images/CharModels/@character.CharacterModel" /> <label class="charName">@character.Name</label></td>
                 <td class="smalltd">
-                    <div >
-                        <form method="post" asp-for="@character.Id" asp-controller="Character" asp-action="Play">
-                            <input type="hidden" name="Id" value="@character.Id" />
+                    <div>
+                        <form method="post" asp-controller="Character" asp-action="Play">
+                            <input type="hidden" asp-for="Id" value="@character.Id" />
                             <input type="submit" value="Play" />
                         </form>
-                        <form method="post" asp-for="@character.Id" asp-controller="Character" asp-action="RemoveCharacter">
-                            <input type="hidden" name="Id" value="@character.Id" />
+                        <form method="post" asp-controller="Character" asp-action="RemoveCharacter">
+                            <input type="hidden" asp-for="Id" value="@character.Id" />
                             <input type="submit" value="Delete" />
                         </form>
                     </div>
