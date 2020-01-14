@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Stranded.Models;
+using Library.Models;
 
 namespace Stranded.Context.Interfaces
 {
@@ -11,6 +11,7 @@ namespace Stranded.Context.Interfaces
         void Delete(int id);
         Character GetById(int id);
         List<Character> GetAll(Account acc);
-        List<CharacterModel> GetAllCharModels();
+        List<string> GetAllCharModels();
+
     }
 }

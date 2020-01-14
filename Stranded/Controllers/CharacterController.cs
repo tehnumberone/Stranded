@@ -2,9 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
-using Stranded.Models;
-using Stranded.Models.ViewModels;
+using Library.Models;
+using Stranded.ViewModels;
 using Stranded.Repositories;
+using Stranded.Converters;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 
@@ -24,10 +25,12 @@ namespace Stranded.Controllers
         public IActionResult Characters()
         {
             if (HttpContext.Session.GetString("Username") == null) { return RedirectToAction("Login", "Account"); }
-            var cvm = new CharacterViewModel
+            var cvm = new CharacterViewModel();
+            var charConverter = new CharacterToCharacterVM();
+            foreach (Character character in _cr.GetAll(_ar.GetByName(HttpContext.Session.GetString("Username"))))
             {
-                Characters = _cr.GetAll(_ar.GetByName(HttpContext.Session.GetString("Username")))
-            };
+                cvm.Characters.Add(charConverter.ToCharVM(character));
+            }
             return View(cvm);
         }
         [HttpGet]
@@ -70,7 +73,7 @@ namespace Stranded.Controllers
         public IActionResult Play(int Id)
         {
             var character = _cr.GetById(Id);
-            return RedirectToAction("LoadMap", "Map", character);
+            return RedirectToAction("LoadMap", "Map", new { characterID = Id });
         }
     }
 }

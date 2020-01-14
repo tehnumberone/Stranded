@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Stranded.Models.ViewModels;
-using Stranded.Models;
+using Stranded.ViewModels;
+using Library.Models;
 
 namespace Stranded.Context.TestContext
 {
@@ -25,12 +25,12 @@ namespace Stranded.Context.TestContext
             throw new NotImplementedException();
         }
 
-        public List<CharacterModel> GetAllCharModels()
+        public List<string> GetAllCharModels()
         {
-            List<CharacterModel> characterModels = new List<CharacterModel>();
-            characterModels.Add(new CharacterModel() { Id = 1, characterModel = "char1.jpg" });
-            characterModels.Add(new CharacterModel() { Id = 2, characterModel = "char2.jpg" });
-            characterModels.Add(new CharacterModel() { Id = 3, characterModel = "char3.jpg" });
+            List<string> characterModels = new List<string>();
+            characterModels.Add("char1.jpg");
+            characterModels.Add("char2.jpg");
+            characterModels.Add("char3.jpg");
             return characterModels;
         }
 

@@ -1,4 +1,4 @@
-﻿@model Stranded.Models.ViewModels.ItemViewModel
+﻿@model Stranded.ViewModels.ItemViewModel
 @{
     ViewData["Title"] = "AllItems";
 }
@@ -25,7 +25,7 @@
                         <input type="hidden" asp-for="Id" value="@item.Id" />
                         <input type="submit" value="Delete" />
                     </form>
-                    <form method="post" asp-controller="Item" asp-action="Sorteer">
+                    <form method="post" asp-controller="Item" asp-action="SortByType">
                         <input type="hidden" asp-for="Sortingtype" value="@Model.Sortingtype" />
                         <input type="submit" value="Sort by Type" />
                     </form>

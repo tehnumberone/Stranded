@@ -24,3 +24,16 @@ function toggleDropdown(e) {
 $('body')
     .on('mouseenter mouseleave', '.dropdown', toggleDropdown)
     .on('click', '.dropdown-menu a', toggleDropdown);
+
+function saveGame() {
+    if (window.test !== undefined) {
+        var charData = { inventoryitem: "'" + window.test.src + "'" };
+        $.ajax({
+            type: 'POST',
+            data: charData,
+            url: '/Map/SaveGame',
+            success: alert('Progress saved. You can now leave this page safely.')
+        });
+        console.log(window.test.src);
+    }
+}

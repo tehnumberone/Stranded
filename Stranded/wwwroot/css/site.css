@@ -48,20 +48,6 @@ a {
 .nav-item {
     padding-right: 25px;
 }
-/*........................................*/
-/* Buttons                                */
-.btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
-}
-
-button.accept-policy {
-    font-size: 1rem;
-    line-height: inherit;
-}
-
-/*........................................*/
 
 /* Opmaak website                         */
 h1 {
@@ -167,6 +153,14 @@ body {
 
 td {
     padding: 0px;
+}
+
+.saveButton {
+    position: fixed;
+    top: 100px;
+    right: 300px;
+    text-align: right;
+    z-index: 10;
 }
 
 .Gui {

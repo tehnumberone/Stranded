@@ -5,8 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Stranded.Models;
-using Stranded.Models.ViewModels;
+using Library.Models;
+using Stranded.Converters;
+using Stranded.ViewModels;
 using Stranded.Repositories;
 
 namespace Stranded.Controllers
@@ -23,19 +24,13 @@ namespace Stranded.Controllers
         public IActionResult AllItems(ItemViewModel ivm)
         {
             if (HttpContext.Session.GetString("Username") != "Admin") { return RedirectToAction("Index", "Home"); }
-            ivm.DBItems = _ir.GetAllItems(ivm.Sortingtype);
+            var itemConvert = new ItemToItemVM();
             ivm.AllItems = new List<ItemViewModel>();
-            foreach (Item item in ivm.DBItems)
+            foreach (Item item in _ir.GetAllItems(ivm.Sortingtype))
             {
-                ItemViewModel temp = new ItemViewModel()
-                {
-                    Id = item.Id,
-                    Name = item.Name,
-                    ItemType = item.ItemType,
-                    ImageFile = Convert.ToBase64String(item.ImageFile)
-                };
-                ivm.AllItems.Add(temp);
+                ivm.AllItems.Add(itemConvert.ToItemVM(item));
             }
+
             return View(ivm);
         }
         [HttpGet]
@@ -61,7 +56,7 @@ namespace Stranded.Controllers
                 {
                     Name = icvm.Name,
                     ImageFile = memoryStream.ToArray(),
-                    ItemType = icvm.ItemType,
+                    ItemType = (Library.Models.ItemType)icvm.ItemType,
                 };
                 _ir.Create(tempitem);
                 return RedirectToAction("AllItems", "Item");
@@ -72,14 +67,23 @@ namespace Stranded.Controllers
         public IActionResult RemoveItem(ItemViewModel ivm)
         {
             _ir.Delete(ivm.Id);
-            return RedirectToAction("AlleItems");
+            return RedirectToAction("AllItems");
         }
         [HttpPost]
-        public IActionResult Sorteer(ItemViewModel ivm)
+        public IActionResult SortByType(ItemViewModel ivm)
         {
             if (ivm.Sortingtype == 0) { ivm.Sortingtype = 1; }
             else { ivm.Sortingtype = 0; }
             return RedirectToAction("AllItems", ivm);
+        }
+        [HttpGet]
+        public IActionResult SelectItem(ItemViewModel ivm)
+        {
+            Item tempitem = _ir.GetItem(ivm.Id);
+            ivm.ImageFile = Convert.ToBase64String(tempitem.ImageFile);
+            ivm.Name = tempitem.Name;
+            ivm.ItemType = (Stranded.ViewModels.ItemType)tempitem.ItemType;
+            return View(ivm);
         }
     }
 }

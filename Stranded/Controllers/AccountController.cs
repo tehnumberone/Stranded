@@ -4,8 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Stranded.Repositories;
-using Stranded.Models.ViewModels;
-using Stranded.Models;
+using Stranded.ViewModels;
+using Stranded.Converters;
+using Library.Models;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 
@@ -74,10 +75,12 @@ namespace Stranded.Controllers
         public IActionResult AllAccounts()
         {
             if (HttpContext.Session.GetString("Username") != "Admin") { return RedirectToAction("Home", "Index"); }
-            var avm = new AccountViewModel()
+            var accountConvert = new AccountToAccountVM();
+            var avm = new AccountViewModel();
+            foreach (Account acc in _ar.GetAllAccounts())
             {
-                AllAccounts = _ar.GetAllAccounts()
-            };
+                avm.AllAccounts.Add(accountConvert.ToAccVM(acc));
+            }
             return View(avm);
         }
     }

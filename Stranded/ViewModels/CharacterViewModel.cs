@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Stranded.Models.ViewModels
+namespace Stranded.ViewModels
 {
     public class CharacterViewModel
     {
-        public List<Character> Characters = new List<Character>();
+        public List<CharacterViewModel> Characters = new List<CharacterViewModel>();
         public int Id { get; set; }
         public string Name { get; set; }
         public string CharacterModel { get; set; }
+        public int Hp { get; set; }
+        public int Level { get; set; }
+        public int Hydration { get; set; }
+        public int Hunger { get; set; }
     }
 }

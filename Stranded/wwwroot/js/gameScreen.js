@@ -17,7 +17,6 @@ function gameLoop(currentTime) {
     ctx.clearRect(0, 0, gameWidth, gameHeight);//clear everything from canvas
     gLogic.update(deltaTime);//refresh locations
     gLogic.draw(ctx);//refresh drawn elements
-
     requestAnimationFrame(gameLoop);//request frame so loop continues
 }
 gameLoop();

@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Stranded.Models.ViewModels
+namespace Stranded.ViewModels
 {
-    public enum ItemType
+    public enum ItemType //If more item types are added, they have to be added to the item.cs model in the library too.
     {
         Tool = 1,
         Food,

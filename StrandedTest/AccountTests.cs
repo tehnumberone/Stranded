@@ -1,10 +1,10 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Stranded.Models.ViewModels;
+using Stranded.ViewModels;
 using System.Collections.Generic;
 using Stranded.Repositories;
 using Stranded.Context.Interfaces;
 using Stranded.Context.TestContext;
-using Stranded.Models;
+using Library.Models;
 
 namespace StrandedTest
 {

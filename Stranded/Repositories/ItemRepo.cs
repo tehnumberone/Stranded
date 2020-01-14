@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Stranded.Context.Interfaces;
-using Stranded.Models;
-using Stranded.Models.ViewModels;
+using Library.Models;
+using Stranded.ViewModels;
 
 namespace Stranded.Repositories
 {
@@ -34,6 +34,10 @@ namespace Stranded.Repositories
         public List<Item> GetAllItems(int sorteertype)
         {
             return ctx.GetAllItems(sorteertype);
+        }
+        public Item GetItem(int id)
+        {
+            return ctx.GetItem(id);
         }
     }
 }

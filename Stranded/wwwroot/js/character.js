@@ -1,5 +1,8 @@
-﻿export default class Character {
-    constructor(gameLogic, charmodel) {
+﻿import inventory from "./inventory.js";
+
+export default class Character {
+    constructor(gameLogic, charmodel, currentLevel) {
+        this.inventory = new inventory(gameLogic,document.getElementById("inventoryImg"));
         this.gameWidth = gameLogic.gameWidth;
         this.gameHeight = gameLogic.gameHeight;
 
@@ -11,41 +14,51 @@
 
         this.position =
             {
-                x: this.gameWidth / 2 - this.width / 2,
-                y: this.gameHeight - this.height - 10
+                x: 0,
+                y: this.gameHeight - this.height - 190
             };
         this.charmodel = charmodel;
+        this.nextLevel = false;
+        this.previousLevel = false;
+        this.currentLevel = currentLevel;
     }
     draw(ctx) {
         ctx.drawImage(this.charmodel, this.position.x, this.position.y, this.width, this.height);
     }
     update(deltaTime) {
         if (!deltaTime) return;
-        if (this.position.x < 0) {
+        this.exceededBorder();
+    }
+    exceededBorder(){
+        if (this.position.x < 0 && this.currentLevel > 1) {//check left side.
+            this.position.x = this.gameWidth - (this.width * 2);
+            this.previousLevel = true;
+        }
+        if (this.position.x < 0 && this.currentLevel === 1) {//check left side.
             this.position.x = 0;
+            this.previousLevel = false;
         }
-        if (this.position.x > this.gameWidth - this.width) {
+        if (this.position.x > this.gameWidth - this.width && this.currentLevel < 10) {//check right side
+            this.position.x = this.width;
+            this.nextLevel = true;
+        }
+        if (this.position.x > this.gameWidth - this.width && this.currentLevel === 10) {//check right side
             this.position.x = this.gameWidth - this.width;
-        }
-        if (this.position.y < 0) {
-            this.position.y = 0;
-        }
-        if (this.position.y > this.gameHeight - this.height) {
-            this.position.y = this.gameHeight - this.height;
+            this.nextLevel = false;
         }
     }
     moveLeft() {
         this.position.x += (this.speed = -this.maxSpeed);
-
     }
     moveRight() {
         this.position.x += (this.speed = this.maxSpeed);
     }
-    moveUp() {
+    /*moveUp() {
         this.position.y += (this.speed = -this.maxSpeed);
     }
     moveDown() {
         this.position.y += (this.speed = this.maxSpeed);
     }
+    */
 }
 

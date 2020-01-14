@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
-using Stranded.Models;
+using Library.Models;
 using Stranded.Context.Interfaces;
-using Stranded.Models.ViewModels;
+using Stranded.ViewModels;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 
@@ -95,7 +95,7 @@ namespace Stranded.Context.SQLContext
                 using SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    Items.Add(new Item((int)reader["Id"], (string)reader["Name"], (ItemType)reader["Type"], (byte[])reader["ImageFile"]));
+                    Items.Add(new Item((int)reader["Id"], (string)reader["Name"], (Library.Models.ItemType)reader["Type"], (byte[])reader["ImageFile"]));
                 }
             }
             catch (Exception exception)
@@ -105,6 +105,30 @@ namespace Stranded.Context.SQLContext
             connection.Close();
             return Items;
 
+        }
+
+        public Item GetItem(int id)
+        {
+            Item i = new Item();
+            string query = "SELECT * FROM dbo.Items WHERE Id = @Id";
+            var connection = new SqlConnection(_connectionString);
+            try
+            {
+                connection.Open();
+                using SqlCommand cmd = new SqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@Id", id);
+                using SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    i = (new Item((int)reader["Id"], (string)reader["Name"], (Library.Models.ItemType)reader["Type"], (byte[])reader["ImageFile"]));
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
+            connection.Close();
+            return i;
         }
     }
 }

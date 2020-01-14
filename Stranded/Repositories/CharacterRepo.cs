@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Stranded.Context.Interfaces;
-using Stranded.Models;
+using Library.Models;
 
 namespace Stranded.Repositories
 {
@@ -40,7 +40,7 @@ namespace Stranded.Repositories
             return ctx.GetAll(acc);
         }
 
-        public List<CharacterModel> GetAllCharModels()
+        public List<string> GetAllCharModels()
         {
             return ctx.GetAllCharModels();
         }

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Stranded.Models;
 using Stranded.Context.Interfaces;
+using Library.Models;
 
 namespace Stranded.Context.SQLContext
 {
@@ -54,7 +54,7 @@ namespace Stranded.Context.SQLContext
                 {
                     using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
-                        cmd.Parameters.AddWithValue(@"CharacterId", id);
+                        cmd.Parameters.AddWithValue("@CharacterId", id);
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -75,7 +75,7 @@ namespace Stranded.Context.SQLContext
             {
                 connection.Open();
                 using SqlCommand cmd = new SqlCommand(query, connection);
-                cmd.Parameters.AddWithValue(@"Id", id);
+                cmd.Parameters.AddWithValue("@Id", id);
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -105,7 +105,7 @@ namespace Stranded.Context.SQLContext
             {
                 connection.Open();
                 SqlCommand cmd = new SqlCommand(query, connection);
-                cmd.Parameters.AddWithValue(@"AccountID", acc.Id);
+                cmd.Parameters.AddWithValue("@AccountID", acc.Id);
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -122,9 +122,9 @@ namespace Stranded.Context.SQLContext
             }
             return Characters;
         }
-        public List<CharacterModel> GetAllCharModels()
+        public List<string> GetAllCharModels()
         {
-            List<CharacterModel> characterModels = new List<CharacterModel>();
+            List<string> characterModels = new List<string>();
             string query = "SELECT * FROM dbo.CharacterModels";
             var connection = new SqlConnection(_connectionString);
             try
@@ -136,12 +136,7 @@ namespace Stranded.Context.SQLContext
                     {
                         while (reader.Read())
                         {
-                            CharacterModel cm = new CharacterModel()
-                            {
-                                Id = Convert.ToInt32(reader["Id"]),
-                                characterModel = reader["CharacterModel"].ToString()
-                            };
-                            characterModels.Add(cm);
+                            characterModels.Add(reader["CharacterModel"].ToString());
                         }
                     }
                 }

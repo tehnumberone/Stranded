@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
-using Stranded.Models;
+using Library.Models;
 using Stranded.Context.Interfaces;
 using Microsoft.Extensions.Configuration;
-using Stranded.Models.ViewModels;
+using Stranded.ViewModels;
 
 namespace Stranded.Context.SQLContext
 {
@@ -27,9 +27,9 @@ namespace Stranded.Context.SQLContext
                     string query = "INSERT INTO dbo.Accounts (Username,Password,Email) VALUES (@Username,@Password,@Email);";
                     using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
-                        cmd.Parameters.AddWithValue(@"Username", acc.Username);
-                        cmd.Parameters.AddWithValue(@"Password", acc.Password);
-                        cmd.Parameters.AddWithValue(@"Email", acc.Email);
+                        cmd.Parameters.AddWithValue("@Username", acc.Username);
+                        cmd.Parameters.AddWithValue("@Password", acc.Password);
+                        cmd.Parameters.AddWithValue("@Email", acc.Email);
                         cmd.ExecuteNonQuery();
                         connection.Close();
                         return true;
@@ -63,7 +63,7 @@ namespace Stranded.Context.SQLContext
             {
                 connection.Open();
                 using SqlCommand cmd = new SqlCommand(query, connection);
-                cmd.Parameters.AddWithValue(@"Username", Username);
+                cmd.Parameters.AddWithValue("@Username", Username);
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -94,7 +94,7 @@ namespace Stranded.Context.SQLContext
             {
                 connection.Open();
                 using SqlCommand cmd = new SqlCommand(query, connection);
-                cmd.Parameters.AddWithValue(@"Username", Username);
+                cmd.Parameters.AddWithValue("@Username", Username);
                 using SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {

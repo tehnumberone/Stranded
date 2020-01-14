@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Stranded.Models;
+using Library.Models;
 using Stranded.Context.SQLContext;
 
 namespace Stranded.Controllers

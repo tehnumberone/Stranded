@@ -1,4 +1,5 @@
-﻿@model Stranded.Models.ViewModels.MapViewModel
+﻿@using Stranded.ViewModels
+@model Stranded.ViewModels.MapViewModel
 <html>
 <head>
 </head>
@@ -12,14 +13,47 @@
             display: none;
         }
     </style>
-    <img id="character" src="~/images/CharModels/@Model.character.CharacterModel" />
-    <img id="mainmenuImg" src="~/images/Map/firstLevelStranded.png" />
-    <img id="inventoryImg" src="~/images/Map/inventoryBackground.jpg" />
-    <img id="mainmenuImg" src="~/images/Map/MainMenuStranded.png" />
+    @*@for (int i = 1; i < 11; i++)
+        {
+            string levelId = "level" + i + "img";
+            string levelImageLink = "images/Levels/Level1.png";
+            <img id="levelId" src="@levelImageLink" />
+        }*@
+    <div>
+        @*THIS LOADS ALL LEVEL IMAGES IN*@
+        <img id="level1img" src="~/images/Levels/Level1.png" />
+        <img id="level2img" src="~/images/Levels/Level2.png" />
+        <img id="level3img" src="~/images/Levels/Level3.png" />
+        <img id="level4img" src="~/images/Levels/Level4.png" />
+        <img id="level5img" src="~/images/Levels/Level5.png" />
+        <img id="level6img" src="~/images/Levels/Level6.png" />
+        <img id="level7img" src="~/images/Levels/Level7.png" />
+        <img id="level8img" src="~/images/Levels/Level8.png" />
+        <img id="level9img" src="~/images/Levels/Level9.png" />
+        <img id="level10img" src="~/images/Levels/Level10.png" />
+    </div>
+    <div>
+        @*THIS LOADS ALL ITEMS IN*@
+        @foreach (ItemViewModel ivm in Model.allitems)
+        {
+            int itemid = @ivm.Id;
+            <img id="@itemid" class="item" src="data:image/png;base64,@ivm.ImageFile" />
+        }
+    </div>
+    <div>
+        @*THIS LOADS ALL GAME ASSETS IN*@
+        <img id="character" src="~/images/CharModels/@Model.character.CharacterModel" />
+        <img id="inventoryImg" src="~/images/Map/inventoryBackground.jpg" />
+        <img id="mainmenuImg" src="~/images/Map/MainMenuStranded.png" />
+    </div>
     <div class="Gui_Game">
         <canvas id="gameScreen" width="800" height="800"></canvas>
         <script type="module" src="~/js/gameLogic.js"></script>
         <script type="module" src="~/js/gameScreen.js"></script>
+    </div>
+    <div>
+        @*This button will save data.*@
+        <a class="saveButton btn btn-success" onclick="saveGame()">Save progress</a>
     </div>
 </body>
 </html>

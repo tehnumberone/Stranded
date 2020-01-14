@@ -1,5 +1,5 @@
-﻿@using Stranded.Models.ViewModels
-@model Stranded.Models.ViewModels.ItemCreationViewModel
+﻿@using Stranded.ViewModels
+@model Stranded.ViewModels.ItemCreationViewModel
 @{
     ViewData["Title"] = "ItemCreation";
 }
@@ -22,7 +22,7 @@
         </div>
         <div class="col-5">
             <select asp-for="ItemType"
-                    asp-items="Html.GetEnumSelectList<ItemType>()">
+                    asp-items="Html.GetEnumSelectList<Stranded.ViewModels.ItemType>()">
                 <option></option>
             </select>
             <br />

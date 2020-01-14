@@ -1,0 +1,32 @@
+﻿@model Stranded.ViewModels.ItemViewModel
+@{
+    ViewData["Title"] = "SelectItem";
+}
+<h1>Selected Item</h1>
+<table class="table table-bordered table-dark largetd" align="center" style="width: 100%">
+    <tr>
+        <th>Item Image</th>
+        <th>Item Name</th>
+        <th>Item Type</th>
+        <th>Options</th>
+    </tr>
+    <tr>
+        <td> <img src="data:image/png;base64,@Model.ImageFile" class="itemImage" /> </td>
+        <td><label class="charName">@Model.Name</label></td>
+        <td><label class="charName">@Model.ItemType</label></td>
+        <td class="smalltd">
+            <form method="get" asp-controller="Item" asp-action="SelectItem">
+                <input type="hidden" asp-for="Id" value="@Model.Id" />
+                <input type="submit" value="Select" />
+            </form>
+            <form method="post" asp-controller="Item" asp-action="RemoveItem">
+                <input type="hidden" asp-for="Id" value="@Model.Id" />
+                <input type="submit" value="Delete" />
+            </form>
+            <form method="post" asp-controller="Item" asp-action="SortByType">
+                <input type="hidden" asp-for="Sortingtype" value="@Model.Sortingtype" />
+                <input type="submit" value="Sort by Type" />
+            </form>
+        </td>
+    </tr>
+</table>

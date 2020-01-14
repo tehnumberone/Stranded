@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Stranded.Models;
-using Stranded.Models.ViewModels;
+using Library.Models;
+using Stranded.ViewModels;
 
 namespace Stranded.Context.Interfaces
 {
@@ -11,6 +11,6 @@ namespace Stranded.Context.Interfaces
         bool Update(int id);
         bool Delete(int id);
         List<Item> GetAllItems(int sorteertype);
-
+        Item GetItem(int id);
     }
 }

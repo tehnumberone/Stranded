@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Stranded.Models;
+using Library.Models;
 
 namespace Stranded.Context.Interfaces
 {
