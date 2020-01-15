@@ -21,19 +21,30 @@ function toggleDropdown(e) {
     }, e.type === 'mouseleave' ? 100 : 0);
 }
 
+$(document).ready(function () {
+    loadChar();
+});
+
 $('body')
     .on('mouseenter mouseleave', '.dropdown', toggleDropdown)
     .on('click', '.dropdown-menu a', toggleDropdown);
 
 function saveGame() {
-    if (window.test !== undefined) {
-        var charData = { inventoryitem: "'" + window.test.src + "'" };
+    if (window.Level !== undefined && window.characterID !== undefined ) {
+        var charData = {
+            inventoryItems: "'" + window.InventoryItems + "'",
+            hp: window.HP,
+            level: window.Level,
+            hunger: window.Hunger,
+            hydration: window.Hydration,
+            characterID: window.characterID
+        };
+        console.log(charData);
         $.ajax({
             type: 'POST',
             data: charData,
             url: '/Map/SaveGame',
             success: alert('Progress saved. You can now leave this page safely.')
         });
-        console.log(window.test.src);
     }
 }

@@ -7,7 +7,7 @@ namespace Stranded.Context.Interfaces
     public interface ICharacterContext
     {
         bool Create(Character c, Account acc);
-        bool Update(int id);
+        bool Update(Character c);
         void Delete(int id);
         Character GetById(int id);
         List<Character> GetAll(Account acc);

@@ -21,7 +21,7 @@ export default class gameLogic {
         this.gameWidth = gameWidth;
         this.gameState = gameState.MAINMENU;
         this.canvas = canvas;
-        this.currentLevel = 1;
+        this.currentLevel;
         this.charmodel = document.getElementById("character");
         this.levels = [];
         this.inventoryImage = document.getElementById("inventoryImg");
@@ -38,25 +38,39 @@ export default class gameLogic {
         this.mouseposY;
         this.clicked = false;
         this.tempLevel;
+        this.d = new Date();
+        this.now = this.d.getSeconds();
+        this.oldTime;
     }
 
     initialize() {
+        if(window.characterHunger !== undefined && window.characterHydration !== undefined && window.characterHP !== undefined
+         && window.gameLevel !== undefined ){
+            this.char.hunger = window.characterHunger;
+            this.char.hydration = window.characterHydration;
+            this.char.hp = window.characterHP;
+            this.currentLevel = window.gameLevel;
+            this.char.currentLevel=this.currentLevel;
+        }
         if (this.gameState === gameState.RUNNING) {
             //load in game objects
             this.gameObjects = [
-                this.level,
-                this.char
+            this.level,
+            this.char
             ];
             this.loadLevels();
+            this.oldTime = this.now;
         } else {
             return; // if still on mainmenu, exit function
         }
     }
 
     update(deltaTime) {
+        this.d = new Date();
+        this.now = this.d.getSeconds();
         this.gameObjects = [
-            this.level,
-            this.char
+        this.level,
+        this.char
         ];
         this.gameObjects.forEach((object) =>
             object.update(deltaTime));//updates location of game objects
@@ -67,13 +81,34 @@ export default class gameLogic {
                 this.initialize();
             }
         }
+        if(this.gameState === gameState.RUNNING){
+            if(this.now === 0){
+                this.oldTime = 10;
+            }
+            if(this.char.hp !== undefined&& this.char.hunger !== undefined && this.char.hydration !== undefined){
+            if(this.now >= this.oldTime ){
+                this.changeCharacterParameters(this.char);
+                this.oldTime = this.now + 10;
+                if (this.oldTime > 60){
+                    this.oldTime = 60;
+                }
+            }
+            }
+        }
         this.nextLevel();
+        window.Level = this.currentLevel;
     }
 
     draw(ctx) {
-        if (this.gameState === gameState.RUNNING) {
+        if (this.gameState === gameState.RUNNING) {//draws each gameobject when game is started.
             this.gameObjects.forEach((object) =>
-                object.draw(ctx));//draws each gameobject
+                object.draw(ctx));
+            ctx.font = "15px Georgia";
+            ctx.fillText("Level: " + this.currentLevel, 25, 50);
+            ctx.fillText("Hitpoints: " + this.char.hp, 25, 100);
+            ctx.fillText("Hydration: " + this.char.hydration, 25, 150);
+            ctx.fillText("Hunger: " + this.char.hunger, 25, 200);
+
         }
         else if (this.gameState === gameState.INVENTORY) {
             this.inv = this.level.character.inventory;
@@ -84,10 +119,6 @@ export default class gameLogic {
         }
         if (this.levels.length > 0)
             this.level = this.levels[this.currentLevel - 1];
-        ctx.fillText("Current Level: " + this.currentLevel, 50, 100);
-        //else if (this.gameState == this.gameState.CHARACTERSTATS) {
-        //    this.characterStats.draw(ctx);
-        //}
     }
 
     checkClickLocation(e) {
@@ -145,7 +176,26 @@ export default class gameLogic {
             var tempItem = new item(this, tempList[i]);
             allItems.push(tempItem);
         }
-        console.log(allItems);
         return allItems;
+    }
+    changeCharacterParameters(character){
+        if(character.hunger>0){
+        character.hunger = character.hunger - 1;
+        }
+        if(character.hunger === 0){
+            character.hp = character.hp - 1;
+        }
+        if(character.hydration>0){
+        character.hydration = character.hydration -1;
+        }
+        if(character.hydration === 0){
+            character.hp = character.hp - 1;
+        }
+        if(character.hp <= 0){
+            character.hp = 10;
+            character.hydration = 10;
+            character.hunger = 10;
+            alert("You've died! try again..");
+        }
     }
 }

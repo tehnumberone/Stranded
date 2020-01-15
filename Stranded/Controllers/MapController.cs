@@ -27,33 +27,30 @@ namespace Stranded.Controllers
         public IActionResult LoadMap(int characterID)
         {
             if (HttpContext.Session.GetString("Username") == null) { return RedirectToAction("Login", "Account"); }
-            CharacterToCharacterVM characterConvert = new CharacterToCharacterVM();
-            ItemToItemVM itemConverter = new ItemToItemVM();
-            var character = _cr.GetById(characterID);
-            var mvm = new MapViewModel
-            {
-                character = characterConvert.ToCharVM(character)
-            };
+            var characterConvert = new CharacterToCharacterVM();
+            var itemConverter = new ItemToItemVM();
             var tempItemList = new List<ItemViewModel>();
             foreach (Item item in _ir.GetAllItems(0))
             {
                 tempItemList.Add(itemConverter.ToItemVM(item));
             }
-            mvm.allitems = tempItemList;
+            var mvm = new MapViewModel
+            {
+                character = characterConvert.ToCharVM(_cr.GetById(characterID)),
+                allitems = tempItemList
+            };
             return View("Game", mvm);
         }
 
         [HttpPost]
-        public IActionResult SaveGame(string inventoryitem)
+        public IActionResult SaveGame(string[] inventoryItems, int hp, int level, int hunger, int hydration, int characterID)
         {
-            if (inventoryitem == null)
+            if (characterID > 0 && level > 0)
             {
+                _cr.Update(new Character(characterID, hp, hunger, hydration, level));
                 return View();
             }
-            else
-            {
-                return View();
-            }
+            else return View();
         }
     }
 }

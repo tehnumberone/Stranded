@@ -2,7 +2,7 @@
 
 export default class Character {
     constructor(gameLogic, charmodel, currentLevel) {
-        this.inventory = new inventory(gameLogic,document.getElementById("inventoryImg"));
+        this.inventory = new inventory(gameLogic, document.getElementById("inventoryImg"));
         this.gameWidth = gameLogic.gameWidth;
         this.gameHeight = gameLogic.gameHeight;
 
@@ -21,6 +21,9 @@ export default class Character {
         this.nextLevel = false;
         this.previousLevel = false;
         this.currentLevel = currentLevel;
+        this.hunger = 10;
+        this.hydration = 10;
+        this.hp = 10;
     }
     draw(ctx) {
         ctx.drawImage(this.charmodel, this.position.x, this.position.y, this.width, this.height);
@@ -28,6 +31,9 @@ export default class Character {
     update(deltaTime) {
         if (!deltaTime) return;
         this.exceededBorder();
+            window.HP = this.hp;
+            window.Hunger = this.hunger;
+            window.Hydration = this.hydration;
     }
     exceededBorder(){
         if (this.position.x < 0 && this.currentLevel > 1) {//check left side.

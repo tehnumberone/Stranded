@@ -20,9 +20,9 @@ namespace Stranded.Repositories
             return ctx.Create(c, acc);
         }
 
-        public bool Update(int id)
+        public bool Update(Character character)
         {
-            return ctx.Update(id);
+            return ctx.Update(character);
         }
 
         public void Delete(int id)

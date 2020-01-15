@@ -77,6 +77,7 @@ namespace Stranded.Controllers
             if (HttpContext.Session.GetString("Username") != "Admin") { return RedirectToAction("Home", "Index"); }
             var accountConvert = new AccountToAccountVM();
             var avm = new AccountViewModel();
+            avm.AllAccounts = new List<AccountViewModel>();
             foreach (Account acc in _ar.GetAllAccounts())
             {
                 avm.AllAccounts.Add(accountConvert.ToAccVM(acc));

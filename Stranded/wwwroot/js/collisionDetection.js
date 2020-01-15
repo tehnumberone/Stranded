@@ -8,7 +8,6 @@
 
 	isColliding(gameObject){
 		if(this.charPosition.x == gameObject.position.x){
-			console.log("collision = true");
 			return true;
 		}
 	}

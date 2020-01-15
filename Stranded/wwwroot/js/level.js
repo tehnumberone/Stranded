@@ -33,7 +33,13 @@ export default class Level {
         if(this.collisionDetection.isColliding(this.allItems[1])){
             this.allItems[1].displayItem = false;
             this.allItems[1].position.x = -50;
+            if(this.character.inventory.inventoryItems == undefined){
+                this.character.inventory.inventoryItems = [];
+            }
             this.character.inventory.inventoryItems.push(this.allItems[1]);
+            var tempList = [];
+            this.character.inventory.inventoryItems.forEach(element => tempList.push(element.itemModel.src));
+            window.InventoryItems = tempList;
         }
     }
 }

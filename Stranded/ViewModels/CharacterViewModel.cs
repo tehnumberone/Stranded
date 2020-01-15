@@ -8,6 +8,7 @@ namespace Stranded.ViewModels
     public class CharacterViewModel
     {
         public List<CharacterViewModel> Characters = new List<CharacterViewModel>();
+        public InventoryViewModel Inventory = new InventoryViewModel();
         public int Id { get; set; }
         public string Name { get; set; }
         public string CharacterModel { get; set; }

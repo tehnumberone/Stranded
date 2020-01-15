@@ -39,7 +39,7 @@ namespace Stranded.Context.TestContext
             throw new NotImplementedException();
         }
 
-        public bool Update(int id)
+        public bool Update(Character character)
         {
             throw new NotImplementedException();
         }

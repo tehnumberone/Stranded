@@ -18,7 +18,8 @@ namespace Stranded.Converters
                 CharacterModel = c.CharacterModel,
                 Hp = c.Hp,
                 Hunger = c.Hunger,
-                Hydration = c.Hydration
+                Hydration = c.Hydration,
+                Level = c.Level
             };
             return cvm;
         }
@@ -31,7 +32,8 @@ namespace Stranded.Converters
                 CharacterModel = cvm.CharacterModel,
                 Hp = cvm.Hp,
                 Hunger = cvm.Hunger,
-                Hydration = cvm.Hydration
+                Hydration = cvm.Hydration,
+                Level = cvm.Level
             };
             return c;
         }

@@ -22,11 +22,16 @@ namespace Stranded.Context.SQLContext
             try
             {
                 connection.Open();
-                string query = "INSERT INTO dbo.Characters (Name,CharacterModel,AccountID) VALUES (@Name,@CharacterModel,@AccountID)";
+                string query = "INSERT INTO dbo.Characters (Name,CharacterModel,AccountID,Hunger,Hydration,CharLevel,HP) " +
+                    "VALUES (@Name,@CharacterModel,@AccountID,@Hunger,@Hydration,@Level,@HP)";
                 using SqlCommand cmd = new SqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@AccountID", acc.Id);
                 cmd.Parameters.AddWithValue("@CharacterModel", c.CharacterModel);
                 cmd.Parameters.AddWithValue("@Name", c.Name);
+                cmd.Parameters.AddWithValue("@Level", c.Level);
+                cmd.Parameters.AddWithValue("@HP", c.Hp);
+                cmd.Parameters.AddWithValue("@Hunger", c.Hunger);
+                cmd.Parameters.AddWithValue("@Hydration", c.Hydration);
                 cmd.ExecuteNonQuery();
                 return true;
             }
@@ -38,9 +43,28 @@ namespace Stranded.Context.SQLContext
             return false;
         }
 
-        public bool Update(int id)
+        public bool Update(Character c)
         {
-            throw new NotImplementedException();
+            using var connection = new SqlConnection(_connectionString);
+            try
+            {
+                connection.Open();
+                string query = "UPDATE dbo.Characters SET Hunger = @Hunger, Hydration = @Hydration, HP = @HP, CharLevel = @Level WHERE Id = @characterID";
+                using SqlCommand cmd = new SqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@characterID", c.Id);
+                cmd.Parameters.AddWithValue("@Level", c.Level);
+                cmd.Parameters.AddWithValue("@HP", c.Hp);
+                cmd.Parameters.AddWithValue("@Hunger", c.Hunger);
+                cmd.Parameters.AddWithValue("@Hydration", c.Hydration);
+                cmd.ExecuteNonQuery();
+                return true;
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine(exc);
+            }
+            connection.Close();
+            return false;
         }
 
         public void Delete(int id)
@@ -82,7 +106,8 @@ namespace Stranded.Context.SQLContext
                     {
                         if (reader.HasRows)
                         {
-                            c = new Character(id, reader["Name"].ToString(), reader["CharacterModel"].ToString());
+                            c = new Character(id, reader["Name"].ToString(), reader["CharacterModel"].ToString(),
+                                (int)reader["HP"], (int)reader["Hunger"], (int)reader["Hydration"], (int)reader["CharLevel"]);
                         }
                     }
                 }

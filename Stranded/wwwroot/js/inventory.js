@@ -12,11 +12,13 @@
                 y: this.gameHeight / 2 - this.height / 2
             };
         this.image = image;
-        this.inventoryItems = [];
+        this.inventoryItems = window.InventoryItems;
     }
 
     update(deltaTime) {
-
+        if(this.inventoryItems === undefined){
+            this.inventoryItems = [];
+        }
     }
 
     draw(ctx) {
@@ -31,7 +33,6 @@
                 else{
                     var currentYpos = this.gameHeight / 4 - size;
                 }
-                window.test = this.inventoryItems[i].itemModel;
                 ctx.drawImage(this.inventoryItems[i].itemModel, this.gameWidth / 2 -(size / 2), currentYpos , size, size);
             }
         }

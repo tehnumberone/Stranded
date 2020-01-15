@@ -13,14 +13,27 @@
     @foreach (var Account in Model.AllAccounts)
     {
         <tr>
-            <td><label class="charName">@Account.Username</label></td>
-            @foreach (var Character in Account.Characters)
-            {
-                <td> <img src="../images/CharModels/@Character.CharacterModel" /> <label class="charName">@Character.Name</label></td>
-                <td class="smalltd">
-                    <div>
-                    </div>
-                </td>
+            @{
+                <td><label class="charName">@Account.Username</label></td>
+                if (Account.Characters != null && Account.Characters.Count > 0)
+                {
+                    foreach (var Character in Account.Characters)
+                    {
+                        <td> <img src="../images/CharModels/@Character.CharacterModel" /> <label class="charName">@Character.Name</label></td>
+                        <td class="smalltd">
+                            <div>
+                            </div>
+                        </td>
+                    }
+                }
+                else
+                {
+                    <td>  <label class="charName">This user has no characters.</label></td>
+                    <td class="smalltd">
+                        <div>
+                        </div>
+                    </td>
+                }
             }
         </tr>
     }

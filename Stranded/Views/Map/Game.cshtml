@@ -52,6 +52,18 @@
         <script type="module" src="~/js/gameScreen.js"></script>
     </div>
     <div>
+        @*This loads in all values of character when the game was launched*@
+        <script>
+        function loadChar() {
+            window.characterHP = @Model.character.Hp;
+            window.characterHydration = @Model.character.Hydration;
+            window.characterHunger = @Model.character.Hunger;
+            window.gameLevel = @Model.character.Level;
+            window.characterID = @Model.character.Id;
+        }
+        </script>
+    </div>
+    <div>
         @*This button will save data.*@
         <a class="saveButton btn btn-success" onclick="saveGame()">Save progress</a>
     </div>
