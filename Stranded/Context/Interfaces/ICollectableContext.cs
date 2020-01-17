@@ -6,9 +6,9 @@ namespace Stranded.Context.Interfaces
 {
     public interface ICollectableContext
     {
-        int Create(/*Character*/);
+        bool Create(Collectable collectable);
         bool Update(int id);
         bool Delete(int id);
-
+        List<Collectable> GetAll();
     }
 }

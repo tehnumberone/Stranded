@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Library.Models;
-using Stranded.ViewModels;
 
 namespace Stranded.Context.Interfaces
 {

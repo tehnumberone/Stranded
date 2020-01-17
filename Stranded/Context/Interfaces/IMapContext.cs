@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Library.Models;
+﻿using Library.Models;
 
 namespace Stranded.Context.Interfaces
 {
     public interface IMapContext
     {
-        int Create(/*Character*/);
+        bool Create(Map map);
         bool Update(int id);
         bool Delete(int id);
-
+        Map GetByCharID(int characterID);
     }
 }

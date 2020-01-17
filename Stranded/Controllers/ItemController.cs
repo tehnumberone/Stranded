@@ -24,11 +24,10 @@ namespace Stranded.Controllers
         public IActionResult AllItems(ItemViewModel ivm)
         {
             if (HttpContext.Session.GetString("Username") != "Admin") { return RedirectToAction("Index", "Home"); }
-            var itemConvert = new ItemToItemVM();
             ivm.AllItems = new List<ItemViewModel>();
             foreach (Item item in _ir.GetAllItems(ivm.Sortingtype))
             {
-                ivm.AllItems.Add(itemConvert.ToItemVM(item));
+                ivm.AllItems.Add(ItemToItemVM.ToItemVM(item));
             }
 
             return View(ivm);
@@ -50,14 +49,7 @@ namespace Stranded.Controllers
                     ModelState.AddModelError("ImageFile", "Selected file is not an image.");
                     return View("CreateItem", icvm);
                 }
-                MemoryStream memoryStream = new MemoryStream();
-                icvm.ImageFile.CopyTo(memoryStream);
-                Item tempitem = new Item()
-                {
-                    Name = icvm.Name,
-                    ImageFile = memoryStream.ToArray(),
-                    ItemType = (Library.Models.ItemType)icvm.ItemType,
-                };
+                Item tempitem = ItemToItemVM.ToItem(icvm);
                 _ir.Create(tempitem);
                 return RedirectToAction("AllItems", "Item");
             }

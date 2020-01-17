@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Library.Models;
 
 namespace Stranded.Context.Interfaces
 {
     public interface IAnimalContext
     {
-        int Create(/*Character*/);
+        bool Create(Animal animal);
         bool Update(int id);
         bool Delete(int id);
-
+        List<Animal> GetAll();
     }
 }

@@ -9,13 +9,12 @@ namespace Stranded.Converters
 {
     public class AccountToAccountVM
     {
-        CharacterToCharacterVM characterConverter = new CharacterToCharacterVM();
-        public Account ToAccount(AccountViewModel avm)
+        static public Account ToAccount(AccountViewModel avm)
         {
             var TempList = new List<Character>();
             foreach (var character in avm.Characters)
             {
-                TempList.Add(characterConverter.ToCharacter(character));
+                TempList.Add(CharacterToCharacterVM.ToCharacter(character));
             }
             var acc = new Account()
             {
@@ -27,12 +26,12 @@ namespace Stranded.Converters
 
             return acc;
         }
-        public AccountViewModel ToAccVM(Account acc)
+        static public AccountViewModel ToAccVM(Account acc)
         {
             var TempList = new List<CharacterViewModel>();
             foreach (var character in acc.Characters)
             {
-                TempList.Add(characterConverter.ToCharVM(character));
+                TempList.Add(CharacterToCharacterVM.ToCharVM(character));
             }
             var avm = new AccountViewModel()
             {

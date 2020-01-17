@@ -30,7 +30,7 @@ $('body')
     .on('click', '.dropdown-menu a', toggleDropdown);
 
 function saveGame() {
-    if (window.Level !== undefined && window.characterID !== undefined ) {
+    if (window.Level !== undefined && window.characterID !== undefined) {
         var charData = {
             inventoryItems: "'" + window.InventoryItems + "'",
             hp: window.HP,

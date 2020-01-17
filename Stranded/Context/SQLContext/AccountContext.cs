@@ -4,7 +4,6 @@ using Microsoft.Data.SqlClient;
 using Library.Models;
 using Stranded.Context.Interfaces;
 using Microsoft.Extensions.Configuration;
-using Stranded.ViewModels;
 
 namespace Stranded.Context.SQLContext
 {

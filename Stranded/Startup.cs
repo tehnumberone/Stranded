@@ -42,6 +42,14 @@ namespace Stranded
             services.AddScoped<AccountRepo>();
             services.AddTransient<IItemContext, ItemContext>();
             services.AddScoped<ItemRepo>();
+            services.AddTransient<ICollectableContext, CollectableContext>();
+            services.AddScoped<CollectableRepo>();
+            services.AddTransient<IBedContext, BedContext>();
+            services.AddScoped<BedRepo>();
+            services.AddTransient<IMapContext, MapContext>();
+            services.AddScoped<MapRepo>();
+            services.AddTransient<IAnimalContext, AnimalContext>();
+            services.AddScoped<AnimalRepo>();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
 

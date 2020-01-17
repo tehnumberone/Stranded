@@ -27,16 +27,14 @@ namespace Stranded.Controllers
         public IActionResult LoadMap(int characterID)
         {
             if (HttpContext.Session.GetString("Username") == null) { return RedirectToAction("Login", "Account"); }
-            var characterConvert = new CharacterToCharacterVM();
-            var itemConverter = new ItemToItemVM();
             var tempItemList = new List<ItemViewModel>();
             foreach (Item item in _ir.GetAllItems(0))
             {
-                tempItemList.Add(itemConverter.ToItemVM(item));
+                tempItemList.Add(ItemToItemVM.ToItemVM(item));
             }
             var mvm = new MapViewModel
             {
-                character = characterConvert.ToCharVM(_cr.GetById(characterID)),
+                character = CharacterToCharacterVM.ToCharVM(_cr.GetById(characterID)),
                 allitems = tempItemList
             };
             return View("Game", mvm);

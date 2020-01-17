@@ -9,7 +9,7 @@ namespace Stranded.Converters
 {
     public class CharacterToCharacterVM
     {
-        public CharacterViewModel ToCharVM(Character c)
+        static public CharacterViewModel ToCharVM(Character c)
         {
             var cvm = new CharacterViewModel()
             {
@@ -24,7 +24,7 @@ namespace Stranded.Converters
             return cvm;
         }
 
-        public Character ToCharacter(CharacterViewModel cvm)
+        static public Character ToCharacter(CharacterViewModel cvm)
         {
             var c = new Character()
             {

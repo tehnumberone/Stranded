@@ -26,10 +26,9 @@ namespace Stranded.Controllers
         {
             if (HttpContext.Session.GetString("Username") == null) { return RedirectToAction("Login", "Account"); }
             var cvm = new CharacterViewModel();
-            var charConverter = new CharacterToCharacterVM();
             foreach (Character character in _cr.GetAll(_ar.GetByName(HttpContext.Session.GetString("Username"))))
             {
-                cvm.Characters.Add(charConverter.ToCharVM(character));
+                cvm.Characters.Add(CharacterToCharacterVM.ToCharVM(character));
             }
             return View(cvm);
         }

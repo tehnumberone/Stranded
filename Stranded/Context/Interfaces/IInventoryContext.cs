@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Library.Models;
+﻿using Library.Models;
 
 namespace Stranded.Context.Interfaces
 {
     public interface IInventoryContext
     {
-        int Create(/*Character*/);
+        bool Create(Inventory inventory);
         bool Update(int id);
         bool Delete(int id);
-
+        Inventory GetInventory(int characterID);
     }
 }

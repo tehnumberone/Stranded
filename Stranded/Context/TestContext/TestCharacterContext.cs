@@ -1,9 +1,6 @@
 ﻿using Stranded.Context.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Stranded.ViewModels;
 using Library.Models;
 
 namespace Stranded.Context.TestContext
@@ -36,7 +33,15 @@ namespace Stranded.Context.TestContext
 
         public Character GetById(int id)
         {
-            throw new NotImplementedException();
+            Character c = new Character()
+            {
+                Name = "Bob",
+                Level = 1,
+                Hp = 10,
+                Hunger = 10,
+                Hydration = 10
+            };
+            return c;
         }
 
         public bool Update(Character character)

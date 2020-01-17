@@ -10,7 +10,7 @@ namespace Stranded.Converters
 {
     public class ItemToItemVM
     {
-        public Item ToItem(ItemViewModel ivm)
+        static public Item ToItem(ItemViewModel ivm)
         {
             MemoryStream memoryStream = new MemoryStream();
             var item = new Item()
@@ -22,7 +22,20 @@ namespace Stranded.Converters
             };
             return item;
         }
-        public ItemViewModel ToItemVM(Item item)
+        static public Item ToItem(ItemCreationViewModel icvm)
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            icvm.ImageFile.CopyTo(memoryStream);
+            var item = new Item()
+            {
+                Id = icvm.Id,
+                Name = icvm.Name,
+                ItemType = (Library.Models.ItemType)icvm.ItemType,
+                ImageFile = memoryStream.ToArray()
+            };
+            return item;
+        }
+        static public ItemViewModel ToItemVM(Item item)
         {
             var ivm = new ItemViewModel()
             {
