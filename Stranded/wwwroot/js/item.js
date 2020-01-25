@@ -1,3 +1,10 @@
+const itemTypes = {
+    Tool: 1,
+    Food: 2,
+    Medical: 3,
+    Weapon: 4,
+    Armour: 5
+}
 export default class Item {
     constructor(gameLogic, itemModel) {
         this.gameWidth = gameLogic.gameWidth;
@@ -7,20 +14,21 @@ export default class Item {
         this.height = 50;
 
         this.position =
-        {
-            x: this.gameWidth / 2,
-            y: this.gameHeight - this.height - 190
-        };
+            {
+                x: this.gameWidth / 2,
+                y: this.gameHeight - this.height - 190
+            };
         this.itemModel = itemModel;
-        this.displayItem = true;
-        this.pickedUp = false;
+        this.itemType;
+        this.itemName;
     }
     update(deltaTime) {
         if (!deltaTime) return;
     }
 
     draw(ctx) {
-        if(this.itemModel != undefined && this.displayItem){
-            ctx.drawImage(this.itemModel, this.position.x, this.position.y, this.width, this.height);}
+        if (this.itemModel != undefined) {
+            ctx.drawImage(this.itemModel, this.position.x, this.position.y, this.width, this.height);
+        }
     }
 }

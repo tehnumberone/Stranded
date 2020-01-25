@@ -2,7 +2,7 @@
     constructor(gameLogic, image) {
         this.gameWidth = gameLogic.gameWidth;
         this.gameHeight = gameLogic.gameHeight;
-
+        this.gameLogic = gameLogic;
         this.width = 800;
         this.height = 800;
 
@@ -16,25 +16,31 @@
     }
 
     update(deltaTime) {
-        if(this.inventoryItems === undefined){
+        if (this.inventoryItems === undefined) {
             this.inventoryItems = [];
+        }
+        if (this.inventoryItems.length > 0) {
         }
     }
 
     draw(ctx) {
-        //console.log(this.inventoryItems.length);
         ctx.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
-        if (this.inventoryItems !== undefined || this.inventoryItems.length > 0) {
+        if (this.inventoryItems != undefined) {
             for (var i = 0; i < this.inventoryItems.length; i++) {
                 var size = 75;
                 if (i > 0) {
                     var currentYpos = this.gameHeight / 4 + (i * 75);
+                    this.inventoryItems[i].position.y = currentYpos;
                 }
-                else{
+                else {
                     var currentYpos = this.gameHeight / 4 - size;
+                    this.inventoryItems[i].position.y = currentYpos;
                 }
-                ctx.drawImage(this.inventoryItems[i].itemModel, this.gameWidth / 2 -(size / 2), currentYpos , size, size);
+                this.inventoryItems[i].width = size;
+                this.inventoryItems[i].height = size;
+                ctx.drawImage(this.inventoryItems[i].itemModel, this.gameWidth / 2 - (size / 2), currentYpos, size, size);
             }
         }
     }
+
 }

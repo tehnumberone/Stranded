@@ -5,6 +5,7 @@ import mainMenu from "./mainMenu.js";
 import map from "./map.js";
 import level from "./level.js";
 import item from "./item.js";
+import collisionDetection from "./collisionDetection.js";
 
 const gameState = {
     RUNNING: 0,
@@ -21,97 +22,60 @@ export default class gameLogic {
         this.gameWidth = gameWidth;
         this.gameState = gameState.MAINMENU;
         this.canvas = canvas;
-        this.currentLevel;
         this.charmodel = document.getElementById("character");
-        this.levels = [];
         this.inventoryImage = document.getElementById("inventoryImg");
         this.mainMenuImage = document.getElementById("mainmenuImg");
+        this.firstLevelImage = document.getElementById("level1img");
+        this.levels = [];
         this.char = new character(this, this.charmodel, 1);
         this.map = new map(this, this.mapImage);
         this.inv = new inventory(this, this.inventoryImage);
         this.mMenu = new mainMenu(this, this.mainMenuImage, canvas);
-        this.level = new level(this, document.getElementById("level1img"), this.currentLevel, this.loadAllItems(), this.char);
+        this.level = new level(this, this.firstLevelImage, this.currentLevel, this.loadAllItems());
+        this.collisionDetection = new collisionDetection(1);
         new inputHandler(this.char, this);
         this.gameObjects = [];
         this.getMousePos = { x: 0, y: 0 };
         this.mouseposX;
         this.mouseposY;
         this.clicked = false;
+        this.currentLevel;
         this.tempLevel;
         this.d = new Date();
         this.now = this.d.getSeconds();
         this.oldTime;
     }
 
+    //#region Game Engine
+
     initialize() {
-        if(window.characterHunger !== undefined && window.characterHydration !== undefined && window.characterHP !== undefined
-         && window.gameLevel !== undefined ){
-            this.char.hunger = window.characterHunger;
-            this.char.hydration = window.characterHydration;
-            this.char.hp = window.characterHP;
-            this.currentLevel = window.gameLevel;
-            this.char.currentLevel=this.currentLevel;
-        }
-        if (this.gameState === gameState.RUNNING) {
-            //load in game objects
-            this.gameObjects = [
-            this.level,
-            this.char
-            ];
-            this.loadLevels();
-            this.oldTime = this.now;
-        } else {
-            return; // if still on mainmenu, exit function
-        }
+        this.loadCharacter();
+        this.loadGameObjects();
     }
 
     update(deltaTime) {
         this.d = new Date();
         this.now = this.d.getSeconds();
-        this.gameObjects = [
-        this.level,
-        this.char
-        ];
+        this.allGameObjects();
+
         this.gameObjects.forEach((object) =>
-            object.update(deltaTime));//updates location of game objects
-        if (this.clicked === true) {// check waar er geklikt wordt
-            this.clicked = false;
-            if (this.mouseposX >= 83 && this.mouseposX <= 138 && this.mouseposY >= 617 && this.mouseposY <= 639 && this.gameState === gameState.MAINMENU) {
-                this.gameState = gameState.RUNNING;
-                this.initialize();
-            }
-        }
-        if(this.gameState === gameState.RUNNING){
-            if(this.now === 0){
-                this.oldTime = 10;
-            }
-            if(this.char.hp !== undefined&& this.char.hunger !== undefined && this.char.hydration !== undefined){
-            if(this.now >= this.oldTime ){
-                this.changeCharacterParameters(this.char);
-                this.oldTime = this.now + 10;
-                if (this.oldTime > 60){
-                    this.oldTime = 60;
-                }
-            }
-            }
-        }
+            object.update(deltaTime));
+        this.click();
+        this.hungerAndThirst();
         this.nextLevel();
-        window.Level = this.currentLevel;
+        this.saveProgress();
+        this.collision();
     }
 
     draw(ctx) {
         if (this.gameState === gameState.RUNNING) {//draws each gameobject when game is started.
             this.gameObjects.forEach((object) =>
                 object.draw(ctx));
-            ctx.font = "15px Georgia";
-            ctx.fillText("Level: " + this.currentLevel, 25, 50);
-            ctx.fillText("Hitpoints: " + this.char.hp, 25, 100);
-            ctx.fillText("Hydration: " + this.char.hydration, 25, 150);
-            ctx.fillText("Hunger: " + this.char.hunger, 25, 200);
+            this.drawText(ctx);
 
         }
         else if (this.gameState === gameState.INVENTORY) {
-            this.inv = this.level.character.inventory;
+            this.inv = this.char.inventory;
             this.inv.draw(ctx);//draw inventory
         }
         else if (this.gameState === gameState.MAINMENU) {
@@ -121,11 +85,108 @@ export default class gameLogic {
             this.level = this.levels[this.currentLevel - 1];
     }
 
-    checkClickLocation(e) {
-        var r = this.canvas.getBoundingClientRect();
-        this.mouseposX = e.clientX - r.left;
-        this.mouseposY = e.clientY - r.top;
-        this.clicked = true;
+    //#endregion Game Engine
+
+    //#region Loading in the character 
+
+    loadCharacter() {
+        if (window.characterHunger !== undefined && window.characterHydration !== undefined && window.characterHP !== undefined
+            && window.gameLevel !== undefined) {
+            this.char.hunger = window.characterHunger;
+            this.char.hydration = window.characterHydration;
+            this.char.hp = window.characterHP;
+            this.currentLevel = window.gameLevel;
+            this.char.currentLevel = this.currentLevel;
+        }
+    }
+
+    //#endregion Loading in the character 
+
+    //#region Loading in game objects 
+
+    loadGameObjects() {
+        if (this.gameState === gameState.RUNNING) {
+            this.allGameObjects();
+            this.loadLevels2();
+            this.collisionDetection = new collisionDetection(this.levels.length);
+            this.oldTime = this.now;
+        } else {
+            return; // if still on mainmenu, exit function
+        }
+    }
+
+    allGameObjects() {
+        if (this.gameState === gameState.RUNNING) {
+            this.gameObjects = [
+                this.level,
+                this.char
+            ];
+        }
+        else if (this.gameState === gameState.INVENTORY) {
+            this.gameObjects = [
+                this.level,
+                this.char,
+                this.char.inventory
+            ];
+        }
+    }
+
+    //#endregion Loading in game objects
+
+    //#region Character Data Logic
+
+    changeCharacterParameters(character) {
+        if (character.hunger > 0) {
+            character.hunger = character.hunger - 1;
+        }
+        if (character.hunger === 0) {
+            character.hp = character.hp - 1;
+        }
+        if (character.hydration > 0) {
+            character.hydration = character.hydration - 1;
+        }
+        if (character.hydration === 0) {
+            character.hp = character.hp - 1;
+        }
+        if (character.hp <= 0) {
+            character.hp = 10;
+            character.hydration = 10;
+            character.hunger = 10;
+            alert("You've died! try again..");
+        }
+    }
+
+    hungerAndThirst() {
+        if (this.gameState === gameState.RUNNING) {
+            if (this.now === 0) {
+                this.oldTime = 10;
+            }
+            if (this.char.hp !== undefined && this.char.hunger !== undefined && this.char.hydration !== undefined) {
+                if (this.now >= this.oldTime) {
+                    this.changeCharacterParameters(this.char);
+                    this.oldTime = this.now + 10;
+                    if (this.oldTime > 60) {
+                        this.oldTime = 60;
+                    }
+                }
+            }
+        }
+    }
+
+    //#endregion Character Data Logic
+
+    //#region Menu & UI logic
+
+    click() {
+        if (this.gameState === gameState.INVENTORY) {
+            this.inventoryClick(this.char.inventory.inventoryItems);
+        }
+        else if (this.gameState === gameState.RUNNING) {
+            this.unequipItem();
+        }
+        else if (this.gameState === gameState.MAINMENU) {
+            this.mainMenuItemClick();
+        }
     }
 
     openInventory() {//if inventory is open, close it, if its not open, open it
@@ -144,29 +205,172 @@ export default class gameLogic {
         }
     }
 
+    mainMenuItemClick() {
+        if (this.clicked === true) {// check on which menu item the user has clicked.
+            this.clicked = false;
+            if (this.mouseposX >= 83 && this.mouseposX <= 138 && this.mouseposY >= 617 && this.mouseposY <= 639 && this.gameState === gameState.MAINMENU) {
+                this.gameState = gameState.RUNNING;
+                this.initialize();
+            }
+        }
+    }
+
+    inventoryClick(items) {
+        if (this.clicked === true) {// check on which item the user has clicked.
+            this.clicked = false;
+            for (var i = 0; i < items.length; i++) {
+                if (this.mouseposX >= items[i].position.x - items[i].width / 2 && this.mouseposX <= items[i].position.x + items[i].width / 2 &&
+                    this.mouseposY >= items[i].position.y && this.mouseposY <= items[i].position.y + items[i].height &&
+                    this.gameState === gameState.INVENTORY) {
+                    this.gameState = gameState.RUNNING;
+                    this.char.equippedItem = items[i];
+                    this.char.itemEquipped = true;
+                }
+            }
+        }
+    }
+
+    unequipItem() {
+        if (this.clicked === true) {// check if user unequipped item
+            console.log(this.clicked);
+            console.log(this.mouseposY);
+            this.clicked = false; //675, 75, 50, 50
+            if (this.mouseposX >= 675 && this.mouseposX <= 725 && this.mouseposY >= 75 && this.mouseposY <= 125 && this.gameState === gameState.RUNNING) {
+                this.char.itemEquipped = false;
+                this.char.equippedItem = null;
+            }
+        }
+    }
+
+    checkClickLocation(e) {
+        var r = this.canvas.getBoundingClientRect();
+        this.mouseposX = e.clientX - r.left;
+        this.mouseposY = e.clientY - r.top;
+        this.clicked = true;
+    }
+
+    //#endregion Menu & UI logic
+
+    //#region Level logic
+
     nextLevel() {
         if (this.char.previousLevel && this.currentLevel > 1) {
             this.currentLevel--;
             this.char.currentLevel = this.currentLevel;
-            this.loadLevels();
         }
-        if (this.char.nextLevel && this.currentLevel < 10) {
+        if (this.char.nextLevel && this.currentLevel < this.levels.length) {
             this.currentLevel++;
             this.char.currentLevel = this.currentLevel;
-            this.loadLevels();
         }
         this.char.nextLevel = false;
         this.char.previousLevel = false;
     }
 
-    loadLevels() {
-        //Loading ALL background images for each level.
-        this.levels = [];
-        for (var i = 1; i < 11; i++) {
-            this.tempLevel = new level(this, document.getElementById("level" + i + "img"), this.currentLevel, this.loadAllItems(), this.char);
-            this.levels.push(this.tempLevel);
+    levelLog() { // FOR TESTING PURPOSES
+        console.log("game level");
+        console.log(this.currentLevel);
+        console.log("character level");
+        console.log(this.char.currentLevel);
+        if (this.levels.length > 0) {
+            console.log("Level level");
+            console.log(this.levels[this.currentLevel - 1].currentLevel);
         }
     }
+
+    //#endregion Loading in the levels
+
+    //#region All Levels
+
+    loadLevels2() {
+        this.levels = [];
+        var allItems = this.loadAllItems();
+        this.level1(allItems);
+        this.level2(allItems);
+        this.level3(allItems);
+        this.level4(allItems);
+        this.level5(allItems);
+        this.level6(allItems);
+        this.level7(allItems);
+        this.level8(allItems);
+        this.level9(allItems);
+        this.level10(allItems);
+    }
+
+    level1(allItems) {
+        var levelItems = [];
+        levelItems.push(allItems[0]);
+        this.levels.push(
+            new level(this, document.getElementById("level1img"), this.currentLevel, levelItems)
+        );
+    }
+
+    level2(allItems) {
+        var levelItems = [];
+        this.levels.push(
+            new level(this, document.getElementById("level2img"), this.currentLevel, levelItems)
+        );
+    }
+
+    level3(allItems) {
+        var levelItems = [];
+        this.levels.push(
+            new level(this, document.getElementById("level3img"), this.currentLevel, levelItems)
+        );
+    }
+
+    level4(allItems) {
+        var levelItems = [];
+        this.levels.push(
+            new level(this, document.getElementById("level4img"), this.currentLevel, levelItems)
+        );
+    }
+
+    level5(allItems) {
+        var levelItems = [];
+        this.levels.push(
+            new level(this, document.getElementById("level5img"), this.currentLevel, levelItems)
+        );
+    }
+
+    level6(allItems) {
+        var levelItems = [];
+        this.levels.push(
+            new level(this, document.getElementById("level6img"), this.currentLevel, levelItems)
+        );
+    }
+
+    level7(allItems) {
+        var levelItems = [];
+        this.levels.push(
+            new level(this, document.getElementById("level7img"), this.currentLevel, levelItems)
+        );
+    }
+
+    level8(allItems) {
+        var levelItems = [];
+        this.levels.push(
+            new level(this, document.getElementById("level8img"), this.currentLevel, levelItems)
+        );
+    }
+
+    level9(allItems) {
+        var levelItems = [];
+        this.levels.push(
+            new level(this, document.getElementById("level9img"), this.currentLevel, levelItems)
+        );
+    }
+
+    level10(allItems) {
+        var levelItems = [];
+        levelItems.push(allItems[1]);
+        this.levels.push(
+            new level(this, document.getElementById("level10img"), this.currentLevel, levelItems)
+        );
+    }
+
+    //#endregion All Levels
+
+    //#region Loading in the items
 
     loadAllItems() {
         //Loading all items in the game.
@@ -178,24 +382,81 @@ export default class gameLogic {
         }
         return allItems;
     }
-    changeCharacterParameters(character){
-        if(character.hunger>0){
-        character.hunger = character.hunger - 1;
-        }
-        if(character.hunger === 0){
-            character.hp = character.hp - 1;
-        }
-        if(character.hydration>0){
-        character.hydration = character.hydration -1;
-        }
-        if(character.hydration === 0){
-            character.hp = character.hp - 1;
-        }
-        if(character.hp <= 0){
-            character.hp = 10;
-            character.hydration = 10;
-            character.hunger = 10;
-            alert("You've died! try again..");
+
+    //#endregion Loading in the items
+
+    //#region Checking character collision
+
+    collision() {
+        if (this.gameState === gameState.RUNNING) {
+            this.characterCollision(this.char);
+            this.itemCollision(this.char);
         }
     }
+
+    characterCollision(character) {
+        this.collisionDetection.exceededBorder(character);
+    }
+
+    itemCollision(character) {
+        var levelItems = this.levels[this.currentLevel - 1].levelItems;
+        if (levelItems != undefined) {
+            for (var i = 0; i < levelItems.length; i++) {
+                if (this.collisionDetection.isColliding(character, levelItems[i])) {
+                    var characterInventory = this.char.inventory;
+                    if (characterInventory.inventoryItems == undefined) {
+                        characterInventory.inventoryItems = [];
+                    }
+                    characterInventory.inventoryItems.push(levelItems[i]);
+                    levelItems.splice(i, 1);
+                }
+            }
+        }
+    }
+
+    //#endregion Checking character collision
+
+    //#region Save Game
+
+    saveProgress() {
+        this.saveCharacter();
+        this.saveInventory();
+    }
+
+    saveCharacter() {
+        window.Level = this.currentLevel;
+        window.HP = this.char.hp;
+        window.Hunger = this.char.hunger;
+        window.Hydration = this.char.hydration;
+    }
+
+    saveInventory() {
+        var characterInventory = this.char.inventory;
+        if (characterInventory.inventoryItems != undefined) {
+            var tempList = [];
+            characterInventory.inventoryItems.forEach(element => tempList.push(element.itemModel.src));
+            window.InventoryItems = tempList;
+        }
+    }
+
+    //#endregion Save Game
+
+    //#region Draw Text On Screen
+
+    drawText(ctx) {
+        ctx.font = "15px Georgia";
+        if (this.char.hp > 0) {
+            ctx.fillText("Level: " + this.currentLevel, 25, 50);
+            ctx.fillText("Hitpoints: " + this.char.hp, 25, 100);
+            ctx.fillText("Hydration: " + this.char.hydration, 25, 150);
+            ctx.fillText("Hunger: " + this.char.hunger, 25, 200);
+            ctx.fillText("Currently Equipped", 650, 50);
+        }
+
+        if (this.char.itemEquipped) {
+            ctx.drawImage(this.char.equippedItem.itemModel, 675, 75, 50, 50);
+        }
+    }
+
+    //#endregion Draw Text On Screen
 }
