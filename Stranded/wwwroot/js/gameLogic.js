@@ -137,14 +137,17 @@ export default class gameLogic {
         if (character.hunger > 0) {
             character.hunger = character.hunger - 1;
         }
-        if (character.hunger === 0) {
-            character.hp = character.hp - 1;
-        }
         if (character.hydration > 0) {
             character.hydration = character.hydration - 1;
         }
-        if (character.hydration === 0) {
+        if (character.hunger === 0 || character.hydration === 0) {
             character.hp = character.hp - 1;
+        }
+        if (character.hunger > 7 && character.hp < 100) {
+            character.hp = character.hp + 2;
+            if (character.hp > 100) {
+                character.hp = 100;
+            }
         }
         if (character.hp <= 0) {
             character.hp = 10;
@@ -225,8 +228,8 @@ export default class gameLogic {
                         this.char.itemEquipped = true;
                     }
                     else if (items[i].itemType === items[i].itemTypes.Food) {
-                        this.char.hunger = 10;
-                        this.char.hydration = 10;
+                        this.char.hunger = this.char.hunger + 30;
+                        this.char.hydration = this.char.hydration + 30;
                         items.splice(i, 1);
                         this.char.inventory.inventoryItems = items;
                     }
@@ -499,8 +502,8 @@ export default class gameLogic {
 
     showItemInfo(item, ctx) {
         ctx.fillStyle = "#898282";
-        ctx.fillText(item.itemName, 370, 525 - 43); // default x position + width / 2  = X // default y position + height = Y 
-        ctx.fillText(item.itemType, 370, 525 - 12); //Some manual tweaking is needed to make positions perfect
+        ctx.fillText(item.itemName, 370, 625 - 43); // default x position + width / 2  = X // default y position + height = Y 
+        ctx.fillText(item.itemType, 370, 625 - 12); //Some manual tweaking is needed to make positions perfect
         ctx.fillStyle = "#000000";
     }
 

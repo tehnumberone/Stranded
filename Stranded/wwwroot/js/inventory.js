@@ -6,7 +6,7 @@
         this.width = 800;
         this.height = 800;
         this.defaultXpos = 300;
-        this.defaultYpos = 50;
+        this.defaultYpos = 150;
         this.defaultSize = 55;
         this.inventorySize = {
             w: 238,
