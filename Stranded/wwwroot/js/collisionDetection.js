@@ -26,7 +26,9 @@
     }
 
     isColliding(c, gameObject) { // c is character
-        if (c.position.x == gameObject.position.x) {
+        if (c.position.x + c.width / 2 == gameObject.position.x ||
+            c.position.x == gameObject.position.x + gameObject.width / 2 ||
+            c.position.x == gameObject.position.x) {
             return true;
         }
     }

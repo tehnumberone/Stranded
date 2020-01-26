@@ -15,12 +15,22 @@ export default class Level {
             };
         this.levelBackgroundImg = levelBackgroundImg;
         this.currentLevel = currentLevel;
+        this.npcs = [];
+        this.quests = [];
     }
 
     draw(ctx) {
         ctx.drawImage(this.levelBackgroundImg, this.position.x, this.position.y, this.width, this.height); //background of level
         if (this.levelItems != undefined) {//draws all items of the level.
             this.levelItems.forEach((object) =>
+                object.draw(ctx));
+        }
+        if (this.npcs > 0) {
+            this.npcs.forEach((object) =>
+                object.draw(ctx));
+        }
+        if (this.quests > 0) {
+            this.quests.forEach((object) =>
                 object.draw(ctx));
         }
     }

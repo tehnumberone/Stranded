@@ -1,10 +1,3 @@
-const itemTypes = {
-    Tool: 1,
-    Food: 2,
-    Medical: 3,
-    Weapon: 4,
-    Armour: 5
-}
 export default class Item {
     constructor(gameLogic, itemModel) {
         this.gameWidth = gameLogic.gameWidth;
@@ -21,7 +14,15 @@ export default class Item {
         this.itemModel = itemModel;
         this.itemType;
         this.itemName;
+        this.itemTypes = {
+            Tool: "Tool",
+            Food: "Food",
+            Medical: "Medical",
+            Weapon: "Weapon",
+            Armour: "Armour"
+        };
     }
+
     update(deltaTime) {
         if (!deltaTime) return;
     }

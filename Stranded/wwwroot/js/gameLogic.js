@@ -35,7 +35,7 @@ export default class gameLogic {
         this.collisionDetection = new collisionDetection(1);
         new inputHandler(this.char, this);
         this.gameObjects = [];
-        this.getMousePos = { x: 0, y: 0 };
+        this.getMousePos = { x: 0, y: 0 };//x is horizontal y is vertical
         this.mouseposX;
         this.mouseposY;
         this.clicked = false;
@@ -60,23 +60,21 @@ export default class gameLogic {
 
         this.gameObjects.forEach((object) =>
             object.update(deltaTime));
-        this.click();
-        this.hungerAndThirst();
-        this.nextLevel();
-        this.saveProgress();
-        this.collision();
+        this.onClick();             //check user click positions
+        this.hungerAndThirst();     //update player survival stats
+        this.nextLevel();           //advance to next level if border is reached
+        this.saveProgress();        //saves progress TODO: only when changes have been made to character or level
+        this.collision();           //checks all object collision
     }
 
     draw(ctx) {
-        if (this.gameState === gameState.RUNNING) {//draws each gameobject when game is started.
+        if (this.gameState === gameState.RUNNING || this.gameState === gameState.INVENTORY) {//draws each gameobject when game is started.
             this.gameObjects.forEach((object) =>
                 object.draw(ctx));
             this.drawText(ctx);
-
-        }
-        else if (this.gameState === gameState.INVENTORY) {
-            this.inv = this.char.inventory;
-            this.inv.draw(ctx);//draw inventory
+            if (this.char.inventory.inventoryItems != undefined && this.gameState === gameState.INVENTORY) {
+                this.inventoryHover(this.char.inventory.inventoryItems, ctx)
+            }
         }
         else if (this.gameState === gameState.MAINMENU) {
             this.mMenu.draw(ctx);//draw mainmenu
@@ -177,11 +175,11 @@ export default class gameLogic {
 
     //#region Menu & UI logic
 
-    click() {
+    onClick() {
         if (this.gameState === gameState.INVENTORY) {
             this.inventoryClick(this.char.inventory.inventoryItems);
         }
-        else if (this.gameState === gameState.RUNNING) {
+        else if (this.gameState === gameState.RUNNING && this.char.equippedItem != undefined) {
             this.unequipItem();
         }
         else if (this.gameState === gameState.MAINMENU) {
@@ -216,15 +214,33 @@ export default class gameLogic {
     }
 
     inventoryClick(items) {
-        if (this.clicked === true) {// check on which item the user has clicked.
+        if (this.clicked) {// check on which item the user has clicked.
             this.clicked = false;
             for (var i = 0; i < items.length; i++) {
-                if (this.mouseposX >= items[i].position.x - items[i].width / 2 && this.mouseposX <= items[i].position.x + items[i].width / 2 &&
-                    this.mouseposY >= items[i].position.y && this.mouseposY <= items[i].position.y + items[i].height &&
+                if (this.mouseOnObject(items[i]) &&
                     this.gameState === gameState.INVENTORY) {
                     this.gameState = gameState.RUNNING;
-                    this.char.equippedItem = items[i];
-                    this.char.itemEquipped = true;
+                    if (items[i].itemType === items[i].itemTypes.Weapon || items[i].itemType === items[i].itemTypes.Tool) {
+                        this.char.equippedItem = items[i];
+                        this.char.itemEquipped = true;
+                    }
+                    else if (items[i].itemType === items[i].itemTypes.Food) {
+                        this.char.hunger = 10;
+                        this.char.hydration = 10;
+                        items.splice(i, 1);
+                        this.char.inventory.inventoryItems = items;
+                    }
+                }
+            }
+        }
+    }
+
+    inventoryHover(items, ctx) {
+        if (!this.clicked) {
+            for (var i = 0; i < items.length; i++) {
+                if (this.mouseOnObject(items[i]) &&
+                    this.gameState === gameState.INVENTORY || this.gameState === gameState.RUNNING) {
+                    this.showItemInfo(items[i], ctx);
                 }
             }
         }
@@ -232,9 +248,7 @@ export default class gameLogic {
 
     unequipItem() {
         if (this.clicked === true) {// check if user unequipped item
-            console.log(this.clicked);
-            console.log(this.mouseposY);
-            this.clicked = false; //675, 75, 50, 50
+            this.clicked = false;
             if (this.mouseposX >= 675 && this.mouseposX <= 725 && this.mouseposY >= 75 && this.mouseposY <= 125 && this.gameState === gameState.RUNNING) {
                 this.char.itemEquipped = false;
                 this.char.equippedItem = null;
@@ -247,6 +261,19 @@ export default class gameLogic {
         this.mouseposX = e.clientX - r.left;
         this.mouseposY = e.clientY - r.top;
         this.clicked = true;
+    }
+
+    checkHoverLocation(e) {
+        var r = this.canvas.getBoundingClientRect();
+        this.mouseposX = e.clientX - r.left;
+        this.mouseposY = e.clientY - r.top;
+    }
+
+    mouseOnObject(object) {
+        if (this.mouseposX >= object.position.x && this.mouseposX <= object.position.x + object.width &&
+            this.mouseposY >= object.position.y && this.mouseposY <= object.position.y + object.height) {
+            return true;
+        }
     }
 
     //#endregion Menu & UI logic
@@ -298,7 +325,17 @@ export default class gameLogic {
 
     level1(allItems) {
         var levelItems = [];
+        allItems[0].itemName = "Dragon Dagger";
+        allItems[0].itemType = allItems[0].itemTypes.Weapon
         levelItems.push(allItems[0]);
+        //for (var i = 0; i < 27; i++) {//TEST & DEBUG PURPOSES TO FILL INVENTORY
+        //    var tempitem = new item(this, allItems[0].itemModel);
+        //    tempitem.itemName = "Dragon Dagger" + i;
+        //    tempitem.itemType = tempitem.itemTypes.Weapon
+        //    tempitem.position.x = tempitem.position.x;
+        //    tempitem.position.y = tempitem.position.y;
+        //    levelItems.push(tempitem);
+        //}
         this.levels.push(
             new level(this, document.getElementById("level1img"), this.currentLevel, levelItems)
         );
@@ -362,7 +399,9 @@ export default class gameLogic {
 
     level10(allItems) {
         var levelItems = [];
-        levelItems.push(allItems[1]);
+        allItems[3].itemName = "Apple";
+        allItems[3].itemType = allItems[3].itemTypes.Food
+        levelItems.push(allItems[3]);
         this.levels.push(
             new level(this, document.getElementById("level10img"), this.currentLevel, levelItems)
         );
@@ -390,7 +429,9 @@ export default class gameLogic {
     collision() {
         if (this.gameState === gameState.RUNNING) {
             this.characterCollision(this.char);
-            this.itemCollision(this.char);
+            if (this.level.levelItems.length > 0) {
+                this.itemCollision(this.char, this.level);
+            }
         }
     }
 
@@ -398,17 +439,15 @@ export default class gameLogic {
         this.collisionDetection.exceededBorder(character);
     }
 
-    itemCollision(character) {
-        var levelItems = this.levels[this.currentLevel - 1].levelItems;
-        if (levelItems != undefined) {
+    itemCollision(character, level) {
+        var levelItems = level.levelItems;
+        if (this.char.inventory != undefined) {
+            var invItems = this.char.inventory.inventoryItems;
             for (var i = 0; i < levelItems.length; i++) {
                 if (this.collisionDetection.isColliding(character, levelItems[i])) {
-                    var characterInventory = this.char.inventory;
-                    if (characterInventory.inventoryItems == undefined) {
-                        characterInventory.inventoryItems = [];
-                    }
-                    characterInventory.inventoryItems.push(levelItems[i]);
+                    invItems.push(levelItems[i]);
                     levelItems.splice(i, 1);
+                    break;
                 }
             }
         }
@@ -456,6 +495,13 @@ export default class gameLogic {
         if (this.char.itemEquipped) {
             ctx.drawImage(this.char.equippedItem.itemModel, 675, 75, 50, 50);
         }
+    }
+
+    showItemInfo(item, ctx) {
+        ctx.fillStyle = "#898282";
+        ctx.fillText(item.itemName, 370, 525 - 43); // default x position + width / 2  = X // default y position + height = Y 
+        ctx.fillText(item.itemType, 370, 525 - 12); //Some manual tweaking is needed to make positions perfect
+        ctx.fillStyle = "#000000";
     }
 
     //#endregion Draw Text On Screen

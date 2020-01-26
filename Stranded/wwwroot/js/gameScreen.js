@@ -10,13 +10,14 @@ let lastTime = 0;
 
 let gLogic = new GameLogic(gameHeight, gameWidth, canvas);
 canvas.addEventListener("click", function (event) { gLogic.checkClickLocation(event) }, false);//set click event
+canvas.onmousemove = function (event) { gLogic.checkHoverLocation(event) }                     //set hover event
 function gameLoop(currentTime) {
     let deltaTime = currentTime - lastTime;
     lastTime = currentTime;
 
     ctx.clearRect(0, 0, gameWidth, gameHeight);//clear everything from canvas
-    gLogic.update(deltaTime);//refresh locations
-    gLogic.draw(ctx);//refresh drawn elements
-    requestAnimationFrame(gameLoop);//request frame so loop continues
+    gLogic.update(deltaTime);                  //refresh gamestate
+    gLogic.draw(ctx);                          //refresh drawn elements
+    requestAnimationFrame(gameLoop);           //request frame so loop continues
 }
 gameLoop();

@@ -1,7 +1,7 @@
 ﻿import inventory from "./inventory.js";
 
 export default class Character {
-    constructor(gameLogic, charmodel, currentLevel) {
+    constructor(gameLogic, charmodel, currentLevel, quest) {
         this.inventory = new inventory(gameLogic, document.getElementById("inventoryImg"));
         this.gameWidth = gameLogic.gameWidth;
         this.gameHeight = gameLogic.gameHeight;
