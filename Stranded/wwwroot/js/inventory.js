@@ -25,8 +25,6 @@
     }
 
     update(deltaTime) {
-        if (this.inventoryItems.length > 0) {
-        }
     }
 
     draw(ctx) {
@@ -44,7 +42,7 @@
         var currentYpos = this.defaultYpos;
         this.allRows = [];
 
-        for (var a = 1; a < inventoryItems.length + 1; a++) {
+        for (var a = 1; a < inventoryItems.length + 1; a++) { // Sorts all the rows. this sorts them in rows of 4.
             row.push(inventoryItems[a]);
             if (a % 4 === 0 && a != 0) {
                 this.allRows.push(row);

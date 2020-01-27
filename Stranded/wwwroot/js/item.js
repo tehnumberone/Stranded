@@ -1,5 +1,5 @@
 export default class Item {
-    constructor(gameLogic, itemModel) {
+    constructor(gameLogic, itemModel, itemName, itemType) {
         this.gameWidth = gameLogic.gameWidth;
         this.gameHeight = gameLogic.gameHeight;
 
@@ -12,8 +12,8 @@ export default class Item {
                 y: this.gameHeight - this.height - 190
             };
         this.itemModel = itemModel;
-        this.itemType;
-        this.itemName;
+        this.itemType = itemType;
+        this.itemName = itemName;
         this.itemTypes = {
             Tool: "Tool",
             Food: "Food",
@@ -21,6 +21,7 @@ export default class Item {
             Weapon: "Weapon",
             Armour: "Armour"
         };
+        this.isRetrieved = false;
     }
 
     update(deltaTime) {

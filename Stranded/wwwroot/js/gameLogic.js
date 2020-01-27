@@ -6,6 +6,7 @@ import map from "./map.js";
 import level from "./level.js";
 import item from "./item.js";
 import collisionDetection from "./collisionDetection.js";
+import quest from "./quest.js";
 
 const gameState = {
     RUNNING: 0,
@@ -27,12 +28,12 @@ export default class gameLogic {
         this.mainMenuImage = document.getElementById("mainmenuImg");
         this.firstLevelImage = document.getElementById("level1img");
         this.levels = [];
-        this.char = new character(this, this.charmodel, 1);
+        this.char = new character(this, this.charmodel);
         this.map = new map(this, this.mapImage);
         this.inv = new inventory(this, this.inventoryImage);
         this.mMenu = new mainMenu(this, this.mainMenuImage, canvas);
         this.level = new level(this, this.firstLevelImage, this.currentLevel, this.loadAllItems());
-        this.collisionDetection = new collisionDetection(1);
+        this.collisionDetection = new collisionDetection(10);
         new inputHandler(this.char, this);
         this.gameObjects = [];
         this.getMousePos = { x: 0, y: 0 };//x is horizontal y is vertical
@@ -44,6 +45,7 @@ export default class gameLogic {
         this.d = new Date();
         this.now = this.d.getSeconds();
         this.oldTime;
+        this.interact = false;
     }
 
     //#region Game Engine
@@ -65,6 +67,9 @@ export default class gameLogic {
         this.nextLevel();           //advance to next level if border is reached
         this.saveProgress();        //saves progress TODO: only when changes have been made to character or level
         this.collision();           //checks all object collision
+        if (this.interact) {//resets interact in case player used it without being over an item.
+            this.interact = false;
+        }
     }
 
     draw(ctx) {
@@ -72,7 +77,7 @@ export default class gameLogic {
             this.gameObjects.forEach((object) =>
                 object.draw(ctx));
             this.drawText(ctx);
-            if (this.char.inventory.inventoryItems != undefined && this.gameState === gameState.INVENTORY) {
+            if (this.char.inventory != undefined && this.char.inventory.inventoryItems != undefined && this.gameState === gameState.INVENTORY) {
                 this.inventoryHover(this.char.inventory.inventoryItems, ctx)
             }
         }
@@ -105,7 +110,7 @@ export default class gameLogic {
     loadGameObjects() {
         if (this.gameState === gameState.RUNNING) {
             this.allGameObjects();
-            this.loadLevels2();
+            this.loadLevels();
             this.collisionDetection = new collisionDetection(this.levels.length);
             this.oldTime = this.now;
         } else {
@@ -228,10 +233,11 @@ export default class gameLogic {
                         this.char.itemEquipped = true;
                     }
                     else if (items[i].itemType === items[i].itemTypes.Food) {
-                        this.char.hunger = this.char.hunger + 30;
-                        this.char.hydration = this.char.hydration + 30;
+                        this.char.hunger = this.char.hunger + 20;
+                        this.char.hydration = this.char.hydration + 20;
                         items.splice(i, 1);
-                        this.char.inventory.inventoryItems = items;
+                        if (this.char.hunger > 100) { this.char.hunger = 100; }
+                        if (this.char.hydration > 100) { this.char.hydration = 100; }
                     }
                 }
             }
@@ -311,7 +317,7 @@ export default class gameLogic {
 
     //#region All Levels
 
-    loadLevels2() {
+    loadLevels() {
         this.levels = [];
         var allItems = this.loadAllItems();
         this.level1(allItems);
@@ -328,83 +334,101 @@ export default class gameLogic {
 
     level1(allItems) {
         var levelItems = [];
-        allItems[0].itemName = "Dragon Dagger";
-        allItems[0].itemType = allItems[0].itemTypes.Weapon
-        levelItems.push(allItems[0]);
         //for (var i = 0; i < 27; i++) {//TEST & DEBUG PURPOSES TO FILL INVENTORY
         //    var tempitem = new item(this, allItems[0].itemModel);
-        //    tempitem.itemName = "Dragon Dagger" + i;
-        //    tempitem.itemType = tempitem.itemTypes.Weapon
-        //    tempitem.position.x = tempitem.position.x;
-        //    tempitem.position.y = tempitem.position.y;
-        //    levelItems.push(tempitem);
+        //    levelItems.push(new item(this, allItems[0].itemModel, "Dragon Dagger " + i, allItems[0].itemTypes.Weapon));
         //}
-        this.levels.push(
-            new level(this, document.getElementById("level1img"), this.currentLevel, levelItems)
-        );
+        var questItem = new item(this, allItems[2].itemModel, "Dumbbell", allItems[2].itemTypes.Tool);
+        var questReward = new item(this, allItems[1].itemModel, "Apple", allItems[1].itemTypes.Food);
+
+        var npc = new character(this, document.getElementById("npc1img"));
+        npc.height = 180;
+        npc.width = 116.7;
+        npc.position.y = this.gameHeight - npc.height - 190;
+        npc.position.x = this.gameWidth - this.gameWidth / 3;
+
+        var characterDialogue = " I lost my dumbbell! Please retrieve it for me.";
+        var completionDialogue = " Thank you so much! Here, have a reward!";
+        var tempquest = new quest(this, characterDialogue, completionDialogue, questItem, npc, questReward);
+        var tempLevel = new level(this, document.getElementById("level1img"), this.currentLevel, levelItems);
+
+        tempLevel.quests.push(tempquest);
+        tempLevel.npcs.push(npc);
+
+        tempLevel.toolTip = true;
+        tempLevel.dialogues.push("Your first quest, how exciting! Lets help him out!");
+        tempLevel.dialogues.push("Look around for his dumbbell so that he can go");
+        tempLevel.dialogues.push("back to pumping iron!");
+
+        this.levels.push(tempLevel);
     }
 
     level2(allItems) {
         var levelItems = [];
-        this.levels.push(
-            new level(this, document.getElementById("level2img"), this.currentLevel, levelItems)
-        );
+        levelItems.push(new item(this, allItems[1].itemModel, "Apple", allItems[1].itemTypes.Food));
+        var tempLevel = new level(this, document.getElementById("level2img"), this.currentLevel, levelItems);
+        tempLevel.toolTip = true;
+        tempLevel.dialogues.push("Hey, you just got stranded! Maybe you should");
+        tempLevel.dialogues.push("eat this apple. It will help you out!");
+        tempLevel.dialogues.push("To interact with items, press E.");
+        this.levels.push(tempLevel);
     }
-
     level3(allItems) {
         var levelItems = [];
-        this.levels.push(
-            new level(this, document.getElementById("level3img"), this.currentLevel, levelItems)
-        );
-    }
 
+        var tempLevel = new level(this, document.getElementById("level3img"), this.currentLevel, levelItems);
+        tempLevel.toolTip = true;
+        tempLevel.dialogues.push("Now that you know how to pick stuff up,");
+        tempLevel.dialogues.push("its time to use the item! Go to your inventory");
+        tempLevel.dialogues.push("by pressing I, and click on the item to use it!");
+        this.levels.push(tempLevel);
+    }
     level4(allItems) {
         var levelItems = [];
-        this.levels.push(
-            new level(this, document.getElementById("level4img"), this.currentLevel, levelItems)
-        );
+        levelItems.push(new item(this, allItems[0].itemModel, "Dragon Dagger", allItems[0].itemTypes.Weapon));
+        var tempLevel = new level(this, document.getElementById("level4img"), this.currentLevel, levelItems);
+        tempLevel.toolTip = true;
+        tempLevel.dialogues.push("Good job, you're getting the hang of it!");
+        tempLevel.dialogues.push("Now it's time for you to learn how to equip");
+        tempLevel.dialogues.push("items. Every tool or weapon can be equipped.");
+        tempLevel.dialogues.push("To equip these items, you click on them.");
+        tempLevel.dialogues.push("To unequip it, click on it in the top right.");
+        this.levels.push(tempLevel);
     }
-
     level5(allItems) {
         var levelItems = [];
         this.levels.push(
             new level(this, document.getElementById("level5img"), this.currentLevel, levelItems)
         );
     }
-
     level6(allItems) {
         var levelItems = [];
         this.levels.push(
             new level(this, document.getElementById("level6img"), this.currentLevel, levelItems)
         );
     }
-
     level7(allItems) {
         var levelItems = [];
         this.levels.push(
             new level(this, document.getElementById("level7img"), this.currentLevel, levelItems)
         );
     }
-
     level8(allItems) {
         var levelItems = [];
         this.levels.push(
             new level(this, document.getElementById("level8img"), this.currentLevel, levelItems)
         );
     }
-
     level9(allItems) {
         var levelItems = [];
         this.levels.push(
             new level(this, document.getElementById("level9img"), this.currentLevel, levelItems)
         );
     }
-
     level10(allItems) {
         var levelItems = [];
-        allItems[3].itemName = "Apple";
-        allItems[3].itemType = allItems[3].itemTypes.Food
-        levelItems.push(allItems[3]);
+        var questItem = new item(this, allItems[2].itemModel, "Dumbbell", allItems[2].itemTypes.Tool);
+        levelItems.push(questItem);
         this.levels.push(
             new level(this, document.getElementById("level10img"), this.currentLevel, levelItems)
         );
@@ -432,8 +456,9 @@ export default class gameLogic {
     collision() {
         if (this.gameState === gameState.RUNNING) {
             this.characterCollision(this.char);
-            if (this.level.levelItems.length > 0) {
+            if (this.level.levelItems.length > 0 && this.interact) {
                 this.itemCollision(this.char, this.level);
+                this.interact = false;
             }
         }
     }
@@ -444,8 +469,8 @@ export default class gameLogic {
 
     itemCollision(character, level) {
         var levelItems = level.levelItems;
-        if (this.char.inventory != undefined) {
-            var invItems = this.char.inventory.inventoryItems;
+        if (character.inventory != undefined) {
+            var invItems = character.inventory.inventoryItems;
             for (var i = 0; i < levelItems.length; i++) {
                 if (this.collisionDetection.isColliding(character, levelItems[i])) {
                     invItems.push(levelItems[i]);
@@ -454,6 +479,14 @@ export default class gameLogic {
                 }
             }
         }
+    }
+
+    npcCollision(character) {
+        var npcs = this.level.npcs;
+        for (var i = 0; i < npcs.length; i++) {
+            if (this.collisionDetection.isColliding(character, npcs[i])) { return true; }
+        }
+        return false;
     }
 
     //#endregion Checking character collision
@@ -473,11 +506,13 @@ export default class gameLogic {
     }
 
     saveInventory() {
-        var characterInventory = this.char.inventory;
-        if (characterInventory.inventoryItems != undefined) {
-            var tempList = [];
-            characterInventory.inventoryItems.forEach(element => tempList.push(element.itemModel.src));
-            window.InventoryItems = tempList;
+        if (this.char.inventory != undefined) {
+            var characterInventory = this.char.inventory;
+            if (characterInventory.inventoryItems != undefined) {
+                var tempList = [];
+                characterInventory.inventoryItems.forEach(element => tempList.push(element.itemModel.src));
+                window.InventoryItems = tempList;
+            }
         }
     }
 
@@ -487,6 +522,7 @@ export default class gameLogic {
 
     drawText(ctx) {
         ctx.font = "15px Georgia";
+        ctx.fillStyle = "#000000";
         if (this.char.hp > 0) {
             ctx.fillText("Level: " + this.currentLevel, 25, 50);
             ctx.fillText("Hitpoints: " + this.char.hp, 25, 100);
@@ -507,5 +543,17 @@ export default class gameLogic {
         ctx.fillStyle = "#000000";
     }
 
+    drawTextWithOutline(txt, x, y, ctx) {
+        ctx.strokeStyle = 'black';
+        ctx.font = "15px Georgia";
+        ctx.miterLimit = 2;
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = 4;
+        ctx.strokeText(txt, x, y);
+        ctx.lineWidth = 2;
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillText(txt, x, y);
+        ctx.fillStyle = "#000000";
+    }
     //#endregion Draw Text On Screen
 }

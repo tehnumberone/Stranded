@@ -1,8 +1,9 @@
 ﻿import inventory from "./inventory.js";
 
 export default class Character {
-    constructor(gameLogic, charmodel, currentLevel, quest) {
-        this.inventory = new inventory(gameLogic, document.getElementById("inventoryImg"));
+    constructor(gameLogic, charmodel, isNpc) {
+        this.inventory;
+        this.gameLogic = gameLogic;
         this.gameWidth = gameLogic.gameWidth;
         this.gameHeight = gameLogic.gameHeight;
         this.width = 50;
@@ -15,19 +16,21 @@ export default class Character {
                 y: this.gameHeight - this.height - 190
             };
         this.charmodel = charmodel;
-        this.nextLevel = false;
-        this.previousLevel = false;
-        this.currentLevel = currentLevel;
         this.hunger = 10;
         this.hydration = 10;
         this.hp = 10;
         this.itemEquipped = false;
-        this.equippedItem;
+        this.equippedItem = null;
+        this.isNpc = isNpc;
+        this.initalized = false;
     }
     draw(ctx) {
         ctx.drawImage(this.charmodel, this.position.x, this.position.y, this.width, this.height);
     }
     update(deltaTime) {
+        if (!this.isNpc && !this.initalized) {
+            this.initializeInventory();
+        }
         if (!deltaTime) return;
     }
     moveLeft() {
@@ -35,6 +38,10 @@ export default class Character {
     }
     moveRight() {
         this.position.x += (this.speed = this.maxSpeed);
+    }
+    initializeInventory() {
+        this.inventory = new inventory(this.gameLogic, document.getElementById("inventoryImg"));
+        this.initalized = true;
     }
 }
 

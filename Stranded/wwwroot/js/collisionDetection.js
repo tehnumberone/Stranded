@@ -26,10 +26,13 @@
     }
 
     isColliding(c, gameObject) { // c is character
-        if (c.position.x + c.width / 2 == gameObject.position.x ||
-            c.position.x == gameObject.position.x + gameObject.width / 2 ||
-            c.position.x == gameObject.position.x) {
+        if (c.position.x == gameObject.position.x) {//check if on same tile
             return true;
         }
+        else if (c.position.x <= gameObject.position.x + gameObject.width - (c.width / 2) && // check if char went over the tile , but is still within the gameObject bounds
+            c.position.x >= gameObject.position.x - (c.width / 2)) {
+            return true;
+        }
+        else return false;
     }
 }

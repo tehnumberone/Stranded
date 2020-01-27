@@ -27,6 +27,11 @@
                             gameLogic.openInventory();
                             break;
                         }
+                    case 69:
+                        if (this.gameLogic.gameState == 0) {
+                            gameLogic.interact = true;
+                            break;
+                        }
                     //case 67: //c button
                     //    stats.characterStats();
                     //    break;
