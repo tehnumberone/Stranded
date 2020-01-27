@@ -233,8 +233,8 @@ export default class gameLogic {
                         this.char.itemEquipped = true;
                     }
                     else if (items[i].itemType === items[i].itemTypes.Food) {
-                        this.char.hunger = this.char.hunger + 20;
-                        this.char.hydration = this.char.hydration + 20;
+                        this.char.hunger = this.char.hunger + 15;
+                        this.char.hydration = this.char.hydration + 5;
                         items.splice(i, 1);
                         if (this.char.hunger > 100) { this.char.hunger = 100; }
                         if (this.char.hydration > 100) { this.char.hydration = 100; }
@@ -342,6 +342,7 @@ export default class gameLogic {
         var questReward = new item(this, allItems[1].itemModel, "Apple", allItems[1].itemTypes.Food);
 
         var npc = new character(this, document.getElementById("npc1img"));
+        npc.isNpc = true;
         npc.height = 180;
         npc.width = 116.7;
         npc.position.y = this.gameHeight - npc.height - 190;

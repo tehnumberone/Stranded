@@ -2,11 +2,9 @@
 
 let canvas = document.getElementById("gameScreen");
 let ctx = canvas.getContext("2d");
-
+let lastTime = 0;
 const gameWidth = 800;
 const gameHeight = 800;
-let lastTime = 0;
-
 
 let gLogic = new GameLogic(gameHeight, gameWidth, canvas);
 canvas.addEventListener("click", function (event) { gLogic.checkClickLocation(event) }, false);//set click event

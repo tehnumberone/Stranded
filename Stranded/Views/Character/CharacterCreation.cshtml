@@ -21,7 +21,7 @@
 
             @foreach (var charModel in @Model.CharModels)
             {
-            <input type="hidden" id="CharModelInput" asp-for="CharacterModel" value="" />
+            <input type="hidden" id="CharModelInput" asp-for="CharacterModel" value="@Model.CharacterModel" />
             <input type="button" class="Char form-control" data-model="@charModel" style="background-image: url(../images/CharModels/@charModel )" />
             }
             <br />

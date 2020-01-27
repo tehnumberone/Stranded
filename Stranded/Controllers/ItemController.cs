@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Library.Models;
@@ -71,6 +68,7 @@ namespace Stranded.Controllers
         [HttpGet]
         public IActionResult SelectItem(ItemViewModel ivm)
         {
+            if (HttpContext.Session.GetString("Username") == null) { return RedirectToAction("Login", "Account"); }
             Item tempitem = _ir.GetItem(ivm.Id);
             ivm.ImageFile = Convert.ToBase64String(tempitem.ImageFile);
             ivm.Name = tempitem.Name;

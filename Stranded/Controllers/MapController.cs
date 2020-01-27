@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Library.Models;
@@ -14,12 +11,10 @@ namespace Stranded.Controllers
     public class MapController : Controller
     {
         private readonly CharacterRepo _cr;
-        private readonly AccountRepo _ar;
         private readonly ItemRepo _ir;
 
-        public MapController(CharacterRepo cr, AccountRepo ar, ItemRepo ir)
+        public MapController(CharacterRepo cr, ItemRepo ir)
         {
-            _ar = ar;
             _cr = cr;
             _ir = ir;
         }

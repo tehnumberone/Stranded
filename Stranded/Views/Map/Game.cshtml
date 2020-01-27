@@ -34,19 +34,23 @@
     </div>
     <div>
         @*THIS LOADS ALL NPC IMAGES IN*@
-        <img id="npc1img" src="~/images/npcs/npc1.png" />
+        <img id="npc1img" src="~/images/npcs/npc1Model.png" />
     </div>
     <div>
         @*THIS LOADS ALL ITEMS IN*@
         @foreach (ItemViewModel ivm in Model.allitems)
         {
             int itemid = @ivm.Id;
-            <img id="@itemid" class="item" src="data:image/png;base64,@ivm.ImageFile" />
+        <img id="@itemid" class="item" src="data:image/png;base64,@ivm.ImageFile" />
         }
     </div>
     <div>
         @*THIS LOADS ALL GAME ASSETS IN*@
-        <img id="character" src="~/images/CharModels/@Model.character.CharacterModel" />
+        @{
+        string srclink="/images/CharModels/"+@Model.character.CharacterModel;
+        srclink = srclink.Insert(srclink.Length - 4,"Model");
+        }
+        <img id="character" src="@srclink" />
         <img id="inventoryImg" src="~/images/Map/inventoryBackground.png" />
         <img id="mainmenuImg" src="~/images/Map/MainMenuStranded.png" />
     </div>

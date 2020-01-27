@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Stranded.Repositories;
 using Stranded.ViewModels;
 using Stranded.Converters;
 using Library.Models;
-using System.Text;
 using Microsoft.AspNetCore.Http;
 
 namespace Stranded.Controllers
@@ -23,6 +19,7 @@ namespace Stranded.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            if (HttpContext.Session.GetString("Username") != null) { return RedirectToAction("Home", "Index"); }
             return View();
         }
         [HttpPost]
@@ -51,6 +48,7 @@ namespace Stranded.Controllers
         [HttpGet]
         public IActionResult Register()
         {
+            if (HttpContext.Session.GetString("Username") != null) { return RedirectToAction("Home", "Index"); }
             return View();
         }
         [HttpPost]
