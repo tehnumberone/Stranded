@@ -8,15 +8,14 @@
         <form asp-controller="Account" method="post">
             <div class="col-md-5">
                 <label>Username</label> <input type="text" asp-for="Username" value="" class="form-control" />
-                <span asp-validation-for="Username" class="alert-danger"></span>
             </div>
+            <span asp-validation-for="Username" class="text-danger col-md-12"></span>
             <div class="col-md-2"></div>
             <br />
             <div class="col-md-5">
                 <label>Password</label> <input type="password" asp-for="Password" value="" class="form-control" />
-                <span asp-validation-for="Password" class="alert-danger"></span>
             </div>
-            <br />
+            <span asp-validation-for="Password" class="text-danger col-md-12"></span>
             <div class="col-md-12">
                 <input type="submit" value="Log in" asp-action="Login" formmethod="post" />
                 <input type="submit" value="Register" asp-action="Register" formmethod="get" />

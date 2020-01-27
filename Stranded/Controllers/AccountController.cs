@@ -19,13 +19,13 @@ namespace Stranded.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            if (HttpContext.Session.GetString("Username") != null) { return RedirectToAction("Home", "Index"); }
+            if (HttpContext.Session.GetString("Username") != null) { return RedirectToAction("Index", "Home"); }
             return View();
         }
         [HttpPost]
         public IActionResult Login(LoginViewModel lvm)
         {
-            if (HttpContext.Session.GetString("Username") != null) { return RedirectToAction("Home", "Index"); }
+            if (HttpContext.Session.GetString("Username") != null) { return RedirectToAction("Index", "Home"); }
             if (ModelState.IsValid)
             {
                 if (_ar.CheckAccount(lvm.Username, lvm.Password))

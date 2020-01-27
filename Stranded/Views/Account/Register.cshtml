@@ -9,15 +9,15 @@
             <div class="col-md-6">
                 <label>Username</label> <input type="text" asp-for="Username" value="" />
             </div>
-            <span asp-validation-for="Username" class="text-info col-md-12"></span>
+            <span asp-validation-for="Username" class="text-danger col-md-12"></span>
             <div class="col-md-6">
                 <label>Password</label> <input type="password" asp-for="Password" value="" />
             </div>
-            <span asp-validation-for="Password" class="text-info col-md-12"></span>
+            <span asp-validation-for="Password" class="text-danger col-md-12"></span>
             <div class="col-md-6">
                 <label>Email</label> <input type="email" asp-for="Email" value="" />
             </div>
-            <span asp-validation-for="Email" class="text-info col-md-12"></span>
+            <span asp-validation-for="Email" class="text-danger col-md-12"></span>
             <br />
             <div class="col-md-6">
                 <input type="submit" asp-action="Register" formmethod="post" value="Register" />
